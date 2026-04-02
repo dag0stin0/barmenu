@@ -194,10 +194,17 @@
       filter: grayscale(0.6) opacity(0.6);
     }
 
-    /* Active nav icon — warm glow */
+    /* Active nav icon — warm glow + scale pop */
     .app-shell nav button[style*="color: var(--color-orange)"] span:first-child,
     nav[class*="border-t"] button[style*="color: var(--color-orange)"] span:first-child {
       filter: drop-shadow(0 1px 6px var(--orange-glow));
+      animation: navPop 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes navPop {
+      0%   { transform: scale(0.85); opacity: 0.5; }
+      60%  { transform: scale(1.08); }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     .app-shell nav button, nav[class*="border-t"] button {
@@ -309,9 +316,21 @@
     }
 
     @keyframes itemIn {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* Staggered cascade — items waterfall in, not all at once */
+    .page-scroll > div > div:last-child > button:nth-child(1)  { animation-delay: 0ms; }
+    .page-scroll > div > div:last-child > button:nth-child(2)  { animation-delay: 30ms; }
+    .page-scroll > div > div:last-child > button:nth-child(3)  { animation-delay: 55ms; }
+    .page-scroll > div > div:last-child > button:nth-child(4)  { animation-delay: 75ms; }
+    .page-scroll > div > div:last-child > button:nth-child(5)  { animation-delay: 90ms; }
+    .page-scroll > div > div:last-child > button:nth-child(6)  { animation-delay: 105ms; }
+    .page-scroll > div > div:last-child > button:nth-child(7)  { animation-delay: 115ms; }
+    .page-scroll > div > div:last-child > button:nth-child(8)  { animation-delay: 125ms; }
+    .page-scroll > div > div:last-child > button:nth-child(9)  { animation-delay: 130ms; }
+    .page-scroll > div > div:last-child > button:nth-child(n+10) { animation-delay: 135ms; }
 
     /* ═══════════════════════════════
        SPIRITS & MODS — Category items (divs, not buttons)
@@ -325,6 +344,32 @@
       margin-top: 4px;
       letter-spacing: 0.08em !important;
       font-weight: 700 !important;
+      animation: headerSlide 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      position: relative;
+    }
+
+    /* Orange accent sweep under category headers */
+    .page-scroll > div > div > div[style*="padding: 12px 16px 6px"][style*="font-family: var(--font-headline)"]::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--orange) 0%, transparent 60%);
+      opacity: 0.2;
+      transform-origin: left;
+      animation: sweepIn 400ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both;
+    }
+
+    @keyframes headerSlide {
+      from { opacity: 0; transform: translateX(-12px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes sweepIn {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
     }
 
     /* Distributor codes — barely visible, staff don't need mid-service */
@@ -373,7 +418,16 @@
       padding-top: 20px !important;
       padding-bottom: 20px !important;
       border-bottom-color: rgba(200, 170, 130, 0.07) !important;
+      animation: itemIn 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
+
+    /* Staggered cascade for spirit/mod items */
+    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(2)  { animation-delay: 0ms; }
+    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(3)  { animation-delay: 25ms; }
+    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(4)  { animation-delay: 45ms; }
+    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(5)  { animation-delay: 60ms; }
+    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(6)  { animation-delay: 75ms; }
+    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(n+7) { animation-delay: 85ms; }
 
     /* Alternating surface on spirit/mod items */
     .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(odd) {
@@ -609,12 +663,15 @@
       border-radius: 8px !important;
       padding: 10px 14px !important;
       margin: 8px 16px 4px !important;
-      transition: border-color 200ms ease, box-shadow 200ms ease;
+      transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 200ms ease,
+                  background-color 200ms ease;
     }
 
     .page-scroll div[style*="align-items: center"][style*="border"]:focus-within {
-      border-color: rgba(235, 85, 40, 0.3) !important;
-      box-shadow: 0 0 0 1.5px rgba(235, 85, 40, 0.08) !important;
+      transform: scale(1.01);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(235, 85, 40, 0.12) !important;
+      background: var(--surface-4) !important;
     }
 
     .page-scroll input::placeholder {
@@ -658,25 +715,84 @@
        MOTION — fast, not flashy
        ═══════════════════════════════ */
 
+    /* App shell — orchestrated entrance */
     .app-shell {
-      animation: fadeIn 200ms var(--spring) both;
+      animation: fadeIn 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     .app-shell > div:first-child {
-      animation: fadeIn 200ms var(--spring) both;
+      animation: slideDown 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     .app-shell > nav, .app-shell nav[class*="border-t"] {
-      animation: fadeIn 200ms var(--spring) both;
+      animation: slideUp 350ms cubic-bezier(0.16, 1, 0.3, 1) 50ms both;
     }
 
+    /* Section headers — subtle rise */
     .page-scroll > div > div:last-child > div:first-child {
-      animation: fadeIn 100ms var(--spring) both;
+      animation: fadeRise 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* Tab content — crossfade on switch */
+    .page-scroll > div[style*="position"] {
+      animation: contentReveal 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* Detail view choreography — title leads, details follow */
+    .page-scroll > div > div > div[style*="font-size: 28px"],
+    .page-scroll > div > div > div[style*="font-size: 26px"],
+    .page-scroll > div > div > div[style*="font-size: 24px"] {
+      animation: detailTitle 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* Tags + meta in detail — stagger after title */
+    .page-scroll > div > div > div > span[style*="border-radius"][style*="padding"] {
+      animation: fadeRise 250ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+    }
+
+    /* Quick Build block — rises in after tags */
+    div[style*="background"]:has(> .quick-build-text) {
+      animation: fadeRise 300ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
+    }
+
+    /* Logo in header — subtle breathe on load */
+    .app-shell > div:first-child span[data-logo-injected] svg {
+      animation: logoBreathe 500ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
     }
 
     @keyframes fadeIn {
       from { opacity: 0; }
       to   { opacity: 1; }
+    }
+
+    @keyframes fadeRise {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes contentReveal {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes detailTitle {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes logoBreathe {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
     }
 
     /* ═══════════════════════════════
