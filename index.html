@@ -1,1224 +1,1006 @@
-<!DOCTYPE html><html lang="en"><head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0a0806">
-    <title>Pub Key Bar Reference</title>
-    <script type="module" crossorigin="" src="/assets/index-D4g3_xPN.js"></script>
-    <link rel="stylesheet" crossorigin="" href="/assets/index-BtVsLR70.css">
-  <style>
-    /* ═══════════════════════════════════════════════
-       PUBKEY BAR REFERENCE — Station Mode
-       Speed-first. Signal over noise. Every pixel earns its keep.
-       ═══════════════════════════════════════════════ */
-
-    :root {
-      --spring: cubic-bezier(0.2, 0.9, 0.3, 1.0);
-      --spring-snappy: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-      /* Surfaces — warm undertone, never pure black */
-      --surface-0: #080604;
-      --surface-1: #0e0c0a;
-      --surface-2: #141210;
-      --surface-3: #1a1816;
-      --surface-4: #221f1c;
-      --surface-5: #2a2724;
-
-      /* Materials */
-      --material-regular: rgba(14, 12, 10, 0.82);
-
-      /* Brand */
-      --orange: #eb5528;
-      --orange-vibrant: #ff6633;
-      --orange-dim: rgba(235, 85, 40, 0.08);
-      --orange-wash: rgba(235, 85, 40, 0.05);
-      --orange-glow: rgba(255, 102, 51, 0.25);
-
-      /* Text — warm, not cold */
-      --text-primary: #ede8e0;
-      --text-secondary: #8c8478;
-      --text-tertiary: #5c564e;
-
-      /* Separators */
-      --separator: rgba(200, 170, 130, 0.06);
-
-      /* Safe areas */
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    /* ═══════════════════════════════
-       FOUNDATION
-       ═══════════════════════════════ */
-
-    #root, .app-shell {
-      background: var(--surface-0) !important;
-    }
-
-    /* Global antialiasing */
-    .app-shell, .app-shell * {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    /* ═══════════════════════════════
-       TYPOGRAPHY SYSTEM
-       3 fonts, 5 sizes, 3 weights. Every choice intentional.
-
-       Scale (1.3 ratio, anchored at 14px body):
-         --type-xs:    10px  — codes, badges
-         --type-sm:    11px  — nav, tab labels
-         --type-base:  14px  — body text, descriptions
-         --type-md:    16px  — section headers, prices
-         --type-lg:    22px  — item names (list)
-         --type-xl:    30px  — detail titles
-
-       Weights:
-         400 — body, descriptions (Barlow Regular)
-         600 — item names, emphasis (Barlow SemiBold)
-         700 — headlines, labels (Barlow Condensed Bold)
-
-       Tracking by context:
-         Large text (22px+):  -0.01em (tighten)
-         Body (14-16px):       0 (neutral)
-         Small uppercase:      0.06-0.08em (open)
-         Mono:                 0.02em (breathe)
-       ═══════════════════════════════ */
-
-    /* Condensed headlines — Bold not Black, open tracking for small, tight for large */
-    .app-shell span[style*="font-family: var(--font-headline)"] {
-      font-weight: 700 !important;
-      letter-spacing: 0.06em !important;
-    }
-
-    /* Large condensed text (header label) — tighter tracking */
-    .app-shell > div:first-child span[style*="font-family: var(--font-headline)"][style*="font-size: 2"] {
-      letter-spacing: 0.03em !important;
-    }
-
-    /* Body text — Regular (400) on dark, not Light (300) */
-    .app-shell div[style*="font-weight: 300"] {
-      font-weight: 400 !important;
-    }
-
-    /* Mono — open slightly, tabular figures for numeric alignment */
-    .app-shell div[style*="font-family: var(--font-mono)"],
-    .app-shell span[style*="font-family: var(--font-mono)"] {
-      letter-spacing: 0.02em !important;
-      font-variant-numeric: tabular-nums !important;
-      font-kerning: normal;
-    }
-
-    /* Page scroll — comfortable line-height for dark-on-light reading */
-    .page-scroll {
-      line-height: 1.6;
-    }
-
-    /* ═══════════════════════════════
-       TOP BAR — frosted material
-       ═══════════════════════════════ */
-
-    .app-shell > div:first-child {
-      background: var(--material-regular) !important;
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      backdrop-filter: saturate(180%) blur(20px);
-      border-bottom: 0.5px solid var(--separator) !important;
-      padding-top: calc(var(--safe-top) + 12px) !important;
-      position: relative;
-      z-index: 10;
-    }
-
-    .app-shell > div:first-child::after {
-      content: '';
-      position: absolute;
-      bottom: -0.5px;
-      left: 0; right: 0;
-      height: 0.5px;
-      background: linear-gradient(90deg,
-        transparent 5%,
-        rgba(235, 85, 40, 0.15) 20%,
-        rgba(235, 85, 40, 0.25) 50%,
-        rgba(235, 85, 40, 0.15) 80%,
-        transparent 95%
-      );
-    }
-
-    /* ═══════════════════════════════
-       SUB-TABS (Cocktails: MENU/CLASSICS/PREVIOUS)
-       ═══════════════════════════════ */
-
-    /* Sub-tabs — minimal, not boxy */
-    .flex.bg-surface,
-    .page-scroll > div:first-child > div:not(.alpha-index) {
-      background: transparent !important;
-      border-bottom: 0.5px solid rgba(200, 170, 130, 0.06) !important;
-      padding: 0 8px !important;
-    }
-
-    .flex.bg-surface button[style*="border-bottom: 2px solid"],
-    .page-scroll > div:first-child > div:not(.alpha-index) button[style*="border-bottom: 2px solid"] {
-      text-shadow: none;
-      border-bottom-width: 1.5px !important;
-    }
-
-    .flex.bg-surface button[style*="border-color: currentcolor currentcolor transparent"],
-    .page-scroll > div:first-child > div:not(.alpha-index) button[style*="border-color: currentcolor currentcolor transparent"] {
-      color: var(--text-tertiary) !important;
-      opacity: 0.7;
-    }
-
-    .flex.bg-surface button,
-    .page-scroll > div:first-child > div:not(.alpha-index) button {
-      transition: color 200ms var(--spring), border-color 200ms var(--spring), opacity 200ms ease !important;
-      -webkit-tap-highlight-color: transparent;
-      min-height: 48px;
-      font-size: 11px !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.07em !important;
-    }
-
-    /* ═══════════════════════════════
-       BOTTOM NAV — vibrancy material
-       ═══════════════════════════════ */
-
-    .app-shell nav, nav[class*="border-t"] {
-      background: var(--material-regular) !important;
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      backdrop-filter: saturate(180%) blur(20px);
-      border-top: 0.5px solid var(--separator) !important;
-      padding-bottom: var(--safe-bottom) !important;
-      position: relative;
-      z-index: 10;
-    }
-
-    .app-shell nav::before, nav[class*="border-t"]::before {
-      content: '';
-      position: absolute;
-      top: -0.5px;
-      left: 0; right: 0;
-      height: 0.5px;
-      background: linear-gradient(90deg,
-        transparent 10%,
-        rgba(200, 170, 130, 0.08) 30%,
-        rgba(200, 170, 130, 0.12) 50%,
-        rgba(200, 170, 130, 0.08) 70%,
-        transparent 90%
-      );
-    }
-
-    /* Inactive nav — quiet */
-    .app-shell nav button[style*="color: var(--color-gray-mid)"],
-    nav[class*="border-t"] button[style*="color: var(--color-gray-mid)"] {
-      color: var(--text-tertiary) !important;
-      opacity: 0.6;
-    }
-
-    /* Inactive emoji icons — desaturate so they don't dominate */
-    .app-shell nav button[style*="color: var(--color-gray-mid)"] span:first-child,
-    nav[class*="border-t"] button[style*="color: var(--color-gray-mid)"] span:first-child {
-      filter: grayscale(0.6) opacity(0.6);
-    }
-
-    /* Active nav icon — warm glow + scale pop */
-    .app-shell nav button[style*="color: var(--color-orange)"] span:first-child,
-    nav[class*="border-t"] button[style*="color: var(--color-orange)"] span:first-child {
-      filter: drop-shadow(0 1px 6px var(--orange-glow));
-      animation: navPop 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    @keyframes navPop {
-      0%   { transform: scale(0.85); opacity: 0.5; }
-      60%  { transform: scale(1.08); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .app-shell nav button, nav[class*="border-t"] button {
-      transition: transform 150ms var(--spring), color 200ms var(--spring) !important;
-      -webkit-tap-highlight-color: transparent;
-      min-height: 56px;
-    }
-
-    /* Nav labels — 700 not 900, tighter than tabs for differentiation */
-    .app-shell nav button span[style*="font-family: var(--font-headline)"],
-    nav[class*="border-t"] button span[style*="font-family: var(--font-headline)"] {
-      font-weight: 700 !important;
-      font-size: 10px !important;
-      letter-spacing: 0.08em !important;
-    }
-
-    .app-shell nav button:active, nav[class*="border-t"] button:active {
-      transform: scale(0.88);
-    }
-
-    /* ═══════════════════════════════
-       COCKTAIL LIST ITEMS (buttons)
-       ═══════════════════════════════ */
-
-    /* Visible warm separators — items need real dividers, not invisible hairlines */
-    .page-scroll button[style*="border-width: medium medium 1px"],
-    .page-scroll button[style*="border-bottom"] {
-      border-bottom-color: rgba(200, 170, 130, 0.08) !important;
-    }
-
-    .page-scroll > div > div:last-child > button {
-      position: relative;
-      padding: 22px 20px 22px 16px !important;
-      min-height: 72px;
-      transition: background-color 120ms ease;
-      -webkit-tap-highlight-color: transparent;
-      animation: itemIn 150ms var(--spring) both;
-    }
-
-    /* Alternating surface — subtle even/odd rhythm breaks the wall-of-text */
-    .page-scroll > div > div:last-child > button:nth-child(even) {
-      background-color: rgba(200, 170, 130, 0.015) !important;
-    }
-
-    /* Left accent bar on hover/touch */
-    .page-scroll > div > div:last-child > button::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 50%;
-      width: 2.5px; height: 0;
-      background: var(--orange);
-      border-radius: 2px;
-      transform: translateY(-50%);
-      transition: height 300ms var(--spring), opacity 300ms var(--spring);
-      opacity: 0;
-    }
-
-    .page-scroll > div > div:last-child > button:hover::before {
-      height: 60%; opacity: 1;
-    }
-
-    .page-scroll > div > div:last-child > button:active::before {
-      height: 80%; opacity: 0.8;
-    }
-
-    .page-scroll > div > div:last-child > button:active {
-      background-color: rgba(200, 170, 130, 0.06) !important;
-      transition: background-color 0ms;
-    }
-
-    .page-scroll > div > div:last-child > button:hover {
-      background-color: rgba(235, 85, 40, 0.03) !important;
-    }
-
-    /* Cocktail name — large text gets tighter tracking */
-    .page-scroll button div[style*="font-size: 22px"][style*="color: var(--color-white)"] {
-      color: var(--text-primary) !important;
-      line-height: 1.25 !important;
-      letter-spacing: -0.01em;
-      font-weight: 600 !important;
-    }
-
-    /* Glass + Method — secondary scale, open mono tracking */
-    .page-scroll button div[style*="font-size: 13px"][style*="color: var(--color-gray-mid)"] {
-      font-size: 12px !important;
-      color: var(--text-secondary) !important;
-      letter-spacing: 0.04em;
-      line-height: 1.6 !important;
-      margin-top: 6px !important;
-      opacity: 0.7;
-    }
-
-    /* Chevron — subtle directional hint */
-    .page-scroll button > div:last-child > span:last-child {
-      transition: transform 250ms var(--spring), opacity 250ms var(--spring);
-      opacity: 0.15;
-      font-size: 14px !important;
-    }
-
-    .page-scroll button:hover > div:last-child > span:last-child {
-      transform: translateX(3px); opacity: 0.4;
-    }
-
-    /* Price — ghost-level for staff, tabular figures for alignment */
-    .page-scroll button div[style*="font-family: var(--font-mono)"][style*="color: var(--color-orange)"] {
-      opacity: 0.25;
-      font-size: 12px !important;
-      font-variant-numeric: tabular-nums !important;
-      letter-spacing: 0 !important;
-    }
-
-    /* Section labels — editorial rule line */
-    .page-scroll > div > div:last-child > div:first-child {
-      color: var(--text-tertiary) !important;
-      position: relative;
-      padding-top: 16px !important;
-      padding-bottom: 10px !important;
-      border-bottom: 0.5px solid rgba(200, 170, 130, 0.06);
-      margin-bottom: 4px;
-    }
-
-    @keyframes itemIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Staggered cascade — items waterfall in, not all at once */
-    .page-scroll > div > div:last-child > button:nth-child(1)  { animation-delay: 0ms; }
-    .page-scroll > div > div:last-child > button:nth-child(2)  { animation-delay: 30ms; }
-    .page-scroll > div > div:last-child > button:nth-child(3)  { animation-delay: 55ms; }
-    .page-scroll > div > div:last-child > button:nth-child(4)  { animation-delay: 75ms; }
-    .page-scroll > div > div:last-child > button:nth-child(5)  { animation-delay: 90ms; }
-    .page-scroll > div > div:last-child > button:nth-child(6)  { animation-delay: 105ms; }
-    .page-scroll > div > div:last-child > button:nth-child(7)  { animation-delay: 115ms; }
-    .page-scroll > div > div:last-child > button:nth-child(8)  { animation-delay: 125ms; }
-    .page-scroll > div > div:last-child > button:nth-child(9)  { animation-delay: 130ms; }
-    .page-scroll > div > div:last-child > button:nth-child(n+10) { animation-delay: 135ms; }
-
-    /* ═══════════════════════════════
-       SPIRITS & MODS — Category items (divs, not buttons)
-       ═══════════════════════════════ */
-
-    /* Category headers — editorial, not industrial */
-    .page-scroll > div > div > div[style*="padding: 12px 16px 6px"][style*="font-family: var(--font-headline)"] {
-      border-bottom: 1px solid rgba(235, 85, 40, 0.10) !important;
-      padding-bottom: 10px !important;
-      padding-top: 20px !important;
-      margin-top: 4px;
-      letter-spacing: 0.08em !important;
-      font-weight: 700 !important;
-      animation: headerSlide 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
-      position: relative;
-    }
-
-    /* Orange accent sweep under category headers */
-    .page-scroll > div > div > div[style*="padding: 12px 16px 6px"][style*="font-family: var(--font-headline)"]::after {
-      content: '';
-      position: absolute;
-      bottom: -0.5px;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, var(--orange) 0%, transparent 60%);
-      opacity: 0.2;
-      transform-origin: left;
-      animation: sweepIn 400ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both;
-    }
-
-    @keyframes headerSlide {
-      from { opacity: 0; transform: translateX(-12px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    @keyframes sweepIn {
-      from { transform: scaleX(0); }
-      to   { transform: scaleX(1); }
-    }
-
-    /* Distributor codes — barely visible, staff don't need mid-service */
-    .page-scroll > div > div > div[style*="padding: 16px"][style*="display: flex"] > div[style*="flex-shrink: 0"][style*="font-family: var(--font-mono)"] {
-      opacity: 0.15 !important;
-      font-size: 9px !important;
-    }
-
-    /* Tier legend — compact single row */
-    .page-scroll > div > div:first-child[style] {
-      padding-top: 6px !important;
-      padding-bottom: 6px !important;
-    }
-
-    /* Spirit/Mod item names — large text, tight tracking */
-    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-size: 19px"] {
-      color: var(--text-primary) !important;
-      line-height: 1.25 !important;
-      letter-spacing: -0.01em;
-      font-weight: 600 !important;
-    }
-
-    /* Spirit sub-type label (mono) — more air */
-    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-family: var(--font-mono)"][style*="font-size: 13px"] {
-      line-height: 1.5 !important;
-      margin-top: 3px !important;
-      letter-spacing: 0.04em !important;
-    }
-
-    /* Descriptions — comfortable reading weight + height */
-    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-weight: 300"] {
-      line-height: 1.65 !important;
-      font-weight: 400 !important;
-      margin-top: 6px !important;
-    }
-
-    /* Spirit usage notes (↳) — key context, breathable */
-    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="color: rgba(235"] {
-      font-size: 13px !important;
-      line-height: 1.6 !important;
-      margin-top: 6px !important;
-      opacity: 0.9;
-    }
-
-    /* Spacing between items — breathing room + visible separators */
-    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"] {
-      padding-top: 20px !important;
-      padding-bottom: 20px !important;
-      border-bottom-color: rgba(200, 170, 130, 0.07) !important;
-      animation: itemIn 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-
-    /* Staggered cascade for spirit/mod items */
-    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(2)  { animation-delay: 0ms; }
-    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(3)  { animation-delay: 25ms; }
-    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(4)  { animation-delay: 45ms; }
-    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(5)  { animation-delay: 60ms; }
-    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(6)  { animation-delay: 75ms; }
-    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(n+7) { animation-delay: 85ms; }
-
-    /* Alternating surface on spirit/mod items */
-    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(odd) {
-      background-color: rgba(200, 170, 130, 0.012);
-    }
-
-    /* ═══════════════════════════════
-       COCKTAIL DETAIL VIEW
-       ═══════════════════════════════ */
-
-    /* Back button — way bigger touch target, easier to reach */
-    .page-scroll button[style*="gap: 4px"][style*="align-items: center"],
-    .page-scroll > div > div > button:first-child {
-      min-height: 48px !important;
-      min-width: 80px !important;
-      padding: 12px 16px !important;
-      font-size: 16px !important;
-      border-radius: 10px;
-      margin: 4px 0 !important;
-      transition: background-color 150ms ease;
-    }
-
-    .page-scroll button[style*="gap: 4px"][style*="align-items: center"]:active,
-    .page-scroll > div > div > button:first-child:active {
-      background-color: var(--surface-3) !important;
-    }
-
-    /* Cocktail title in detail — display size, tight tracking */
-    .page-scroll > div > div > div[style*="font-size: 28px"],
-    .page-scroll > div > div > div[style*="font-size: 26px"],
-    .page-scroll > div > div > div[style*="font-size: 24px"] {
-      font-size: 30px !important;
-      line-height: 1.15 !important;
-      letter-spacing: -0.02em;
-      font-weight: 700 !important;
-      padding-bottom: 14px !important;
-    }
-
-    /* Tag pills below title — more space between them */
-    .page-scroll > div > div > div > span[style*="border-radius"][style*="padding"] {
-      margin-bottom: 4px !important;
-      letter-spacing: 0.02em;
-    }
-
-    /* Garnish line — let it breathe */
-    .page-scroll > div > div > div[style*="font-family: var(--font-mono)"][style*="border-radius"][style*="padding: 6px"] {
-      line-height: 1.6 !important;
-      letter-spacing: 0.02em;
-      margin-top: 8px !important;
-      margin-bottom: 8px !important;
-    }
-
-    /* Quick Build — tight, scannable, spoken-cadence line height */
-    .quick-build-text {
-      color: var(--text-primary) !important;
-      font-size: 1rem !important;
-      line-height: 1.8 !important;
-      letter-spacing: 0.01em;
-      word-spacing: 0.04em;
-      padding: 4px 0 0 !important;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Quick Build container — compact, orange accent */
-    div[style*="background"]:has(> .quick-build-text),
-    div[style*="background"]:has(> span[style*="QUICK BUILD"]),
-    div:has(> span[style*="font-size: 11px"][style*="letter-spacing"]):has(~ .quick-build-text) {
-      border-left: 3px solid var(--orange) !important;
-      border-radius: 0 8px 8px 0 !important;
-      padding: 14px 16px !important;
-      margin: 12px 16px !important;
-    }
-
-    /* QUICK BUILD label — tight to content */
-    div[style*="background"]:has(> .quick-build-text) > div:first-child {
-      margin-bottom: 4px !important;
-    }
-
-    /* "QUICK BUILD" label — make it pop */
-    span[style*="QUICK BUILD"],
-    span[style*="font-size: 11px"][style*="letter-spacing: 0.1em"] {
-      color: var(--orange-vibrant) !important;
-    }
-
-    /* Quick Build — enhanced inline styles */
-    .quick-build-text b {
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .quick-build-text .qb-measure {
-      color: var(--orange-vibrant);
-      font-weight: 700;
-    }
-
-    .quick-build-text .qb-or {
-      display: block;
-      color: var(--text-tertiary);
-      font-size: 0.8em;
-      letter-spacing: 0.1em;
-      margin: 4px 0;
-    }
-
-    .quick-build-text .qb-prompt {
-      color: var(--orange);
-      font-weight: 600;
-    }
-
-    /* Service Notes container — distinct from Quick Build */
-    div[style*="border-left: 3px solid"]:has(> span[style*="SERVICE NOTES"]),
-    div:has(> span[style*="SERVICE NOTES"]) {
-      border-left-color: var(--text-tertiary) !important;
-      opacity: 0.85;
-    }
-
-    /* Tag pills in detail view (price, glass, method) */
-    .page-scroll > div > div > div > span[style*="border-radius"] {
-      font-size: 12px !important;
-    }
-
-    /* Ingredients section header — xs caption, wide tracking */
-    span[style*="font-size: 11px"][style*="letter-spacing"]:not(:empty) {
-      font-size: 10px !important;
-      letter-spacing: 0.10em !important;
-      font-weight: 700 !important;
-    }
-
-    /* View Batch Recipe link — prominent for prep work */
-    .page-scroll a[style*="display: flex"],
-    .page-scroll div[style*="cursor: pointer"][style*="display: flex"][style*="border-radius"] {
-      min-height: 48px;
-    }
-
-    /* ═══════════════════════════════
-       BEER TAB
-       ═══════════════════════════════ */
-
-    /* Tap number label */
-    .page-scroll > div > div > div[style*="padding: 16px"] span[style*="font-family: var(--font-mono)"] {
-      font-weight: 700;
-      letter-spacing: 0.03em;
-    }
-
-    /* Beer service notes (italic orange) — more breathing room */
-    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-style: italic"] {
-      line-height: 1.6 !important;
-      margin-top: 8px !important;
-    }
-
-    /* ═══════════════════════════════
-       WINE TAB — make it useful, not a dead end
-       ═══════════════════════════════ */
-
-    /* "Ask bar manager" text — style as a clear action, not a shrug */
-    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-style: italic"][style*="color: rgba(235"] {
-      font-style: normal !important;
-      padding: 6px 10px;
-      background: rgba(235, 85, 40, 0.06);
-      border-radius: 6px;
-      margin-top: 8px;
-      display: inline-block;
-    }
-
-    /* ═══════════════════════════════
-       TBD ITEMS — dead ends, not traps
-       ═══════════════════════════════ */
-
-    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"]) {
-      opacity: 0.3 !important;
-      pointer-events: none;
-      position: relative;
-    }
-
-    /* Hide the entire price+chevron column on TBD items */
-    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"]) > div:last-child {
-      visibility: hidden !important;
-    }
-
-    /* "COMING SOON" badge replaces price */
-    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"])::after {
-      content: 'COMING SOON';
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: "Space Mono", monospace;
-      font-size: 9px;
-      letter-spacing: 0.08em;
-      color: var(--text-tertiary);
-      background: var(--surface-3);
-      padding: 3px 8px;
-      border-radius: 4px;
-      z-index: 2;
-    }
-
-    /* ═══════════════════════════════
-       SHEET (detail modal for non-cocktail items)
-       ═══════════════════════════════ */
-
-    .sheet-panel {
-      background: var(--surface-3) !important;
-      border-radius: 14px 14px 0 0 !important;
-      border-top: 0.5px solid rgba(200, 170, 130, 0.1);
-      box-shadow:
-        0 -1px 0 rgba(200, 170, 130, 0.04),
-        0 -4px 16px rgba(0, 0, 0, 0.3),
-        0 -16px 48px rgba(0, 0, 0, 0.4);
-      animation: sheetReveal 120ms var(--spring-snappy) !important;
-      max-height: 90dvh !important;
-      padding-bottom: calc(var(--safe-bottom) + 16px) !important;
-    }
-
-    .sheet-panel::before {
-      content: '';
-      display: block;
-      width: 36px; height: 5px;
-      background: rgba(200, 170, 130, 0.2);
-      border-radius: 2.5px;
-      margin: 8px auto 4px;
-    }
-
-    .sheet-panel div[style*="border-bottom"] {
-      padding-block: 10px !important;
-    }
-
-    .sheet-backdrop {
-      background: rgba(0, 0, 0, 0.6) !important;
-      -webkit-backdrop-filter: saturate(120%) blur(24px);
-      backdrop-filter: saturate(120%) blur(24px);
-      animation: backdropFade 80ms ease both !important;
-    }
-
-    @keyframes sheetReveal {
-      from { transform: translate(-50%, 40%); opacity: 0.5; }
-      to   { transform: translate(-50%, 0); opacity: 1; }
-    }
-
-    @keyframes backdropFade {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    /* ═══════════════════════════════
-       SEARCH
-       ═══════════════════════════════ */
-
-    /* Search — single clean bar, no double-box */
-    .page-scroll input[type="text"],
-    .page-scroll input[placeholder*="earch"] {
-      font-size: 15px !important;
-      padding: 6px 4px !important;
-      background: transparent !important;
-      border: none !important;
-      border-radius: 0 !important;
-      color: var(--text-primary) !important;
-      outline: none !important;
-      box-shadow: none !important;
-      min-height: unset;
-      width: 100%;
-    }
-
-    /* Wrapper — slim, warm, single container */
-    .page-scroll div[style*="align-items: center"][style*="border"] {
-      background: var(--surface-3) !important;
-      border: none !important;
-      border-radius: 8px !important;
-      padding: 10px 14px !important;
-      margin: 8px 16px 4px !important;
-      transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
-                  box-shadow 200ms ease,
-                  background-color 200ms ease;
-    }
-
-    .page-scroll div[style*="align-items: center"][style*="border"]:focus-within {
-      transform: scale(1.01);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(235, 85, 40, 0.12) !important;
-      background: var(--surface-4) !important;
-    }
-
-    .page-scroll input::placeholder {
-      color: var(--text-tertiary) !important;
-      font-size: 14px !important;
-    }
-
-    /* ═══════════════════════════════
-       ALPHA INDEX
-       ═══════════════════════════════ */
-
-    .alpha-index {
-      right: 2px !important;
-      top: 50% !important;
-      transform: translateY(-50%) !important;
-      height: auto !important;
-      max-height: calc(100vh - 200px) !important;
-      z-index: 20 !important;
-      gap: 0 !important;
-      align-items: center !important;
-      justify-content: center !important;
-      pointer-events: auto;
-    }
-
-    .alpha-index button:active {
-      color: var(--orange-vibrant) !important;
-      transform: scale(1.4);
-    }
-
-    /* ═══════════════════════════════
-       SCROLLBAR
-       ═══════════════════════════════ */
-
-    .page-scroll {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(200, 170, 130, 0.12) transparent;
-    }
-
-    .page-scroll::-webkit-scrollbar { width: 2px; }
-    .page-scroll::-webkit-scrollbar-track { background: transparent; }
-    .page-scroll::-webkit-scrollbar-thumb { background: rgba(200, 170, 130, 0.12); border-radius: 2px; }
-
-    /* ═══════════════════════════════
-       MOTION — fast, not flashy
-       ═══════════════════════════════ */
-
-    /* App shell — orchestrated entrance */
-    .app-shell {
-      animation: fadeIn 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-
-    .app-shell > div:first-child {
-      animation: slideDown 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-
-    .app-shell > nav, .app-shell nav[class*="border-t"] {
-      animation: slideUp 350ms cubic-bezier(0.16, 1, 0.3, 1) 50ms both;
-    }
-
-    /* Section headers — subtle rise */
-    .page-scroll > div > div:last-child > div:first-child {
-      animation: fadeRise 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-
-    /* Tab content — crossfade on switch */
-    .page-scroll > div[style*="position"] {
-      animation: contentReveal 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-
-    /* Detail view choreography — title leads, details follow */
-    .page-scroll > div > div > div[style*="font-size: 28px"],
-    .page-scroll > div > div > div[style*="font-size: 26px"],
-    .page-scroll > div > div > div[style*="font-size: 24px"] {
-      animation: detailTitle 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    /* Tags + meta in detail — stagger after title */
-    .page-scroll > div > div > div > span[style*="border-radius"][style*="padding"] {
-      animation: fadeRise 250ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
-    }
-
-    /* Quick Build block — rises in after tags */
-    div[style*="background"]:has(> .quick-build-text) {
-      animation: fadeRise 300ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
-    }
-
-    /* Logo in header — subtle breathe on load */
-    .app-shell > div:first-child span[data-logo-injected] svg {
-      animation: logoBreathe 500ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    @keyframes fadeRise {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes contentReveal {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    @keyframes detailTitle {
-      from { opacity: 0; transform: translateY(10px) scale(0.98); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @keyframes logoBreathe {
-      from { opacity: 0; transform: scale(0.95); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    /* ═══════════════════════════════
-       STAFF BADGE
-       ═══════════════════════════════ */
-
-    #staff-badge {
-      position: fixed;
-      top: calc(var(--safe-top) + 8px);
-      right: 12px;
-      z-index: 50;
-      font-family: "Space Mono", monospace;
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: var(--text-tertiary);
-      background: var(--surface-3);
-      border: 0.5px solid var(--separator);
-      padding: 2px 6px;
-      border-radius: 3px;
-      pointer-events: none;
-      opacity: 0.5;
-    }
-
-    /* ═══════════════════════════════
-       WAKE LOCK STATUS
-       ═══════════════════════════════ */
-
-    #wake-lock-status {
-      position: fixed;
-      bottom: calc(80px + var(--safe-bottom));
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 45;
-      font-family: "Space Mono", monospace;
-      font-size: 10px;
-      color: var(--text-tertiary);
-      background: var(--surface-3);
-      border: 0.5px solid var(--separator);
-      padding: 4px 12px;
-      border-radius: 20px;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 300ms ease;
-    }
-
-    #wake-lock-status.visible { opacity: 1; }
-    #wake-lock-status.active {
-      color: #b89860;
-      border-color: rgba(184, 152, 96, 0.2);
-    }
-
-    /* ═══════════════════════════════
-       ACCESSIBILITY
-       ═══════════════════════════════ */
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PubKey — Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<style>
+
+/* ═══════════════════════════════════════════
+   TOKENS
+   ═══════════════════════════════════════════ */
+:root {
+    --bg: #09090b;
+    --surface: #111113;
+    --surface-raised: #19191c;
+    --surface-hover: #1f1f23;
+    --text: #ececf0;
+    --text-secondary: #a1a1aa;
+    --text-tertiary: #63636e;
+    --border: #27272a;
+    --border-light: #1c1c1f;
+
+    --blue: #3b82f6;
+    --blue-soft: #60a5fa;
+    --blue-dim: rgba(59, 130, 246, 0.08);
+    --blue-glow: rgba(59, 130, 246, 0.15);
+
+    --red: #ef4444;
+    --red-soft: #f87171;
+    --red-dim: rgba(239, 68, 68, 0.08);
+    --red-glow: rgba(239, 68, 68, 0.15);
+
+    --orange: #f59e0b;
+    --orange-dim: rgba(245, 158, 11, 0.08);
+
+    --green: #22c55e;
+    --green-dim: rgba(34, 197, 94, 0.10);
+    --yellow: #eab308;
+    --yellow-dim: rgba(234, 179, 8, 0.08);
+    --purple: #a855f7;
+    --purple-dim: rgba(168, 85, 247, 0.08);
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --radius: 8px;
+    --radius-lg: 12px;
+}
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Space Grotesk', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+::selection { background: rgba(59, 130, 246, 0.3); }
+
+.sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ═══════════════════════════════════════════
+   NAV
+   ═══════════════════════════════════════════ */
+.topbar {
+    border-bottom: 1px solid var(--border-light);
+    padding: 0 clamp(16px, 4vw, 48px);
+    height: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+}
+
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.logo-img { height: 20px; width: auto; opacity: 0.7; transition: opacity 0.2s; }
+.logo-img:hover { opacity: 1; }
+
+.topbar-center {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 4px;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 4px; }
+
+.filter-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 4px;
+    border: 1px solid transparent;
+    background: transparent; color: var(--text-tertiary);
+    cursor: pointer; transition: all 0.15s var(--ease);
+    white-space: nowrap;
+    -webkit-appearance: none; appearance: none;
+}
+select.filter-btn {
+    padding-right: 22px;
+    background-image: url("data:image/svg+xml,%3Csvg width='8' height='5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%2363636e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 7px center;
+}
+.filter-btn:hover { color: var(--text-secondary); background: var(--surface-raised); }
+.filter-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+.filter-btn.active { color: var(--text); border-color: var(--border); background: var(--surface); }
+
+.refresh-ts {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--text-tertiary);
+    letter-spacing: 0.3px;
+    margin-left: 8px;
+    opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════ */
+.page { max-width: 1440px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 48px); }
+
+/* ═══════════════════════════════════════════
+   HERO STATS — inline, editorial, not cards
+   ═══════════════════════════════════════════ */
+.stats-bar {
+    display: flex; align-items: baseline; gap: 32px;
+    padding: 28px 0 20px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 24px;
+}
+
+.stat {
+    display: flex; align-items: baseline; gap: 8px;
+}
+.stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px; font-weight: 600;
+    letter-spacing: -1.5px; line-height: 1;
+    color: var(--text);
+}
+.stat-value.nyc { color: var(--blue-soft); }
+.stat-value.dc { color: var(--red-soft); }
+
+.stat-label {
+    font-size: 11px; font-weight: 500;
+    color: var(--text-tertiary);
+    letter-spacing: 0.3px;
+}
+
+.stats-divider {
+    width: 1px; height: 20px;
+    background: var(--border); flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════
+   WEEK NAV
+   ═══════════════════════════════════════════ */
+.week-bar {
+    display: flex; align-items: center; gap: 2px;
+    margin-bottom: 16px;
+}
+
+.week-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: 1px solid var(--border-light);
+    border-radius: 6px; color: var(--text-tertiary);
+    cursor: pointer; font-size: 16px; font-family: system-ui;
+    transition: all 0.12s var(--ease);
+}
+.week-btn:hover { border-color: var(--border); color: var(--text-secondary); background: var(--surface); }
+.week-btn:active { transform: scale(0.94); }
+.week-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+
+.week-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    color: var(--text-secondary);
+    padding: 0 10px;
+    letter-spacing: -0.2px;
+}
+
+.today-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    color: var(--orange); background: var(--orange-dim);
+    border: none; border-radius: 4px;
+    padding: 4px 8px; cursor: pointer;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    transition: all 0.12s var(--ease);
+    margin-left: 6px;
+}
+.today-btn:hover { background: rgba(245, 158, 11, 0.15); }
+.today-btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 1px; }
+
+/* ═══════════════════════════════════════════
+   CALENDAR GRID
+   ═══════════════════════════════════════════ */
+.calendar {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 48px;
+}
+
+.day-col {
+    min-height: 200px;
+    display: flex; flex-direction: column;
+    border-right: 1px solid var(--border-light);
+    background: var(--surface);
+    contain: content;
+    min-width: 0;
+}
+.day-col:last-child { border-right: none; }
+
+/* Today column — warm amber glow */
+.day-col.today {
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.04) 0%, var(--surface) 120px);
+}
+.day-col.today .day-head {
+    background: var(--orange);
+}
+.day-col.today .day-head .dname,
+.day-col.today .day-head .dnum { color: #000 !important; }
+.day-col.today .day-count { background: rgba(0,0,0,0.15); color: #000; }
+
+.day-head {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex; justify-content: space-between;
+    align-items: center;
+    min-height: 44px;
+}
+
+.day-head-info { display: flex; align-items: baseline; gap: 6px; }
+
+.day-head .dname {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-tertiary);
+}
+.day-head .dnum {
+    font-size: 16px; font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
+
+.day-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    color: var(--text-tertiary);
+    background: var(--surface-raised);
+    padding: 2px 6px; border-radius: 3px;
+}
+
+.day-body {
+    padding: 4px; flex: 1;
+    display: flex; flex-direction: column;
+    gap: 3px; overflow-y: auto;
+}
+.day-body::-webkit-scrollbar { width: 0; }
+
+.day-body .empty-day {
+    color: var(--text-tertiary);
+    font-size: 18px; text-align: center;
+    padding: 60px 8px; opacity: 0.2;
+    font-weight: 300;
+}
+
+/* ═══════════════════════════════════════════
+   EVENT CARDS
+   ═══════════════════════════════════════════ */
+.ev {
+    padding: 6px 8px;
+    border-radius: 5px;
+    border-left: 2px solid var(--blue);
+    background: var(--blue-dim);
+    transition: transform 0.12s var(--ease), background 0.12s;
+    cursor: default;
+}
+.ev:hover { transform: translateY(-1px); background: var(--blue-glow); }
+
+.ev.dc { border-left-color: var(--red); background: var(--red-dim); }
+.ev.dc:hover { background: var(--red-glow); }
+
+.ev-top {
+    display: flex; align-items: center; gap: 4px;
+    margin-bottom: 2px;
+}
+
+.loc-pip {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--blue); flex-shrink: 0;
+}
+.loc-pip.dc { background: var(--red); }
+
+.ev-name {
+    font-size: 11px; font-weight: 600;
+    line-height: 1.3; letter-spacing: -0.1px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: var(--text);
+}
+
+.ev-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: 0.2px;
+}
+
+.ev-room {
+    font-size: 9px; color: var(--text-tertiary);
+    margin-top: 1px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Status dot */
+.status-dot {
+    width: 4px; height: 4px; border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--green);
+}
+.status-dot.tentative { background: var(--yellow); }
+.status-dot.prospect { background: var(--purple); }
+.status-dot.closed { background: var(--text-tertiary); opacity: 0.4; }
+
+/* ═══════════════════════════════════════════
+   EMPTY WEEK
+   ═══════════════════════════════════════════ */
+.empty-week {
+    grid-column: 1 / -1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 64px 20px;
+    color: var(--text-tertiary);
+    background: var(--surface);
+}
+.empty-week .empty-icon {
+    font-size: 32px; margin-bottom: 12px; opacity: 0.3;
+}
+.empty-week .empty-text {
+    font-size: 13px; font-weight: 500; color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+.empty-week .empty-sub { font-size: 11px; }
+
+/* ═══════════════════════════════════════════
+   SECTION HEADERS
+   ═══════════════════════════════════════════ */
+.section-row {
+    display: flex; justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    padding-top: 4px;
+}
+.section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--text-tertiary);
+}
+.section-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════════
+   UPCOMING TABLE
+   ═══════════════════════════════════════════ */
+.table-wrap {
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 48px;
+    background: var(--surface);
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+}
+
+.table-wrap table {
+    width: 100%; border-collapse: collapse;
+    font-size: 12px; table-layout: fixed;
+}
+.table-wrap col.c-date    { width: 13%; }
+.table-wrap col.c-time    { width: 15%; }
+.table-wrap col.c-event   { width: 25%; }
+.table-wrap col.c-status  { width: 10%; }
+.table-wrap col.c-loc     { width: 7%;  }
+.table-wrap col.c-room    { width: 17%; }
+.table-wrap col.c-contact { width: 13%; }
+
+.table-wrap th {
+    text-align: left; padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-tertiary);
+    background: var(--surface-raised);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.table-wrap td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    vertical-align: middle;
+}
+.table-wrap tr:last-child td { border-bottom: none; }
+.table-wrap tbody tr { transition: background 0.08s; }
+.table-wrap tbody tr:hover td { background: var(--surface-hover); }
+
+.table-wrap .name-cell { font-weight: 600; color: var(--text); }
+.table-wrap .time-cell {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2px;
+}
+
+/* Table tags */
+.tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.4px;
+    padding: 2px 6px; border-radius: 3px;
+}
+.tag.nyc { background: var(--blue-dim); color: var(--blue-soft); }
+.tag.dc  { background: var(--red-dim);  color: var(--red-soft); }
+
+.tag.definite  { background: var(--green-dim);  color: var(--green); }
+.tag.tentative { background: var(--yellow-dim); color: var(--yellow); }
+.tag.prospect  { background: var(--purple-dim); color: var(--purple); }
+.tag.closed    { background: var(--surface-raised); color: var(--text-tertiary); opacity: 0.6; }
+
+.empty-row {
+    text-align: center; color: var(--text-tertiary);
+    padding: 40px 16px; font-size: 12px;
+}
+
+/* ═══════════════════════════════════════════
+   ROOMS
+   ═══════════════════════════════════════════ */
+.rooms-row {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 64px;
+}
+
+.room-chip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    transition: border-color 0.12s, background 0.12s;
+}
+.room-chip:hover { background: var(--surface-raised); border-color: var(--border); }
+.room-chip .r-name {
+    font-size: 11px; font-weight: 500;
+    color: var(--text-secondary);
+}
+.room-chip .r-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    color: var(--orange);
+    letter-spacing: -0.5px;
+}
+
+/* ═══════════════════════════════════════════
+   ERROR & LOADING
+   ═══════════════════════════════════════════ */
+.loading {
+    text-align: center; padding: 80px 20px;
+    color: var(--text-tertiary); font-size: 12px;
+}
+.loading .spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid var(--border-light);
+    border-top-color: var(--orange);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-bottom: 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-banner {
+    background: var(--red-dim); color: var(--red-soft);
+    padding: 10px 16px; border-radius: var(--radius);
+    margin-bottom: 16px; font-size: 12px; display: none;
+}
+
+/* ═══════════════════════════════════════════
+   KEYBOARD HINT
+   ═══════════════════════════════════════════ */
+.kb-hint {
+    position: fixed; bottom: 14px; right: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--text-tertiary);
+    display: flex; gap: 5px; align-items: center;
+    opacity: 0; animation: fadeHint 0.4s 2s forwards;
+}
+.kb-hint kbd {
+    display: inline-block; padding: 1px 5px; border-radius: 3px;
+    border: 1px solid var(--border); background: var(--surface);
+    font-size: 9px; font-family: inherit;
+}
+@keyframes fadeHint { to { opacity: 0.5; } }
+
+/* ═══════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
         animation-duration: 0.01ms !important;
-        animation-delay: 0ms !important;
         transition-duration: 0.01ms !important;
-      }
+    }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — TABLET
+   ═══════════════════════════════════════════ */
+@media (max-width: 1100px) {
+    .day-head .dnum { font-size: 14px; }
+    .ev-name { font-size: 10px; }
+    .ev-time { font-size: 8px; }
+    .ev-room { display: none; }
+    .stats-bar { gap: 20px; }
+    .stat-value { font-size: 22px; }
+}
+
+@media (max-width: 960px) {
+    .day-col { min-height: 160px; }
+    .ev-top .status-dot { display: none; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-wrap table { min-width: 680px; }
+    .topbar-center { display: none; }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — MOBILE
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .topbar {
+        height: auto; padding: 10px 16px;
+        flex-wrap: wrap; gap: 8px;
+    }
+    .topbar-right { gap: 4px; }
+    .filter-btn, select.filter-btn { font-size: 11px; padding: 8px 12px; min-height: 44px; }
+    select.filter-btn { padding-right: 28px; }
+
+    .page { padding: 0 16px; }
+    .stats-bar { gap: 16px; padding: 20px 0 16px; flex-wrap: wrap; }
+    .stat-value { font-size: 22px; }
+    .stats-divider { display: none; }
+
+    .week-btn { width: 44px; height: 44px; font-size: 18px; }
+
+    .calendar { grid-template-columns: repeat(2, 1fr); }
+    .day-col { min-height: 110px; }
+    .day-head { padding: 8px; }
+    .day-head .dname { font-size: 8px; }
+    .day-head .dnum { font-size: 14px; }
+    .ev { padding: 5px 7px; }
+    .ev-room { display: none; }
+    .ev-top .status-dot { display: none; }
+
+    .rooms-row { margin-bottom: 40px; }
+    .kb-hint { display: none; }
+}
+
+@media (max-width: 480px) {
+    .calendar { grid-template-columns: 1fr; }
+    .day-col { min-height: auto; }
+    .ev-name { font-size: 12px; }
+    .ev-time { font-size: 10px; }
+    .ev-room { display: block; }
+    .ev-top .status-dot { display: block; }
+    .rooms-row { flex-direction: column; }
+    .room-chip { justify-content: space-between; }
+}
+
+/* ═══════════════════════════════════════════
+   PRINT
+   ═══════════════════════════════════════════ */
+@media print {
+    :root {
+        --bg: #fff; --surface: #fff; --surface-raised: #f5f5f5;
+        --text: #111; --text-secondary: #555; --text-tertiary: #888;
+        --border: #ccc; --border-light: #ddd;
+    }
+    body { background: #fff; color: #111; }
+    .topbar { position: relative; background: #fff; }
+    .logo-img { filter: invert(1); }
+    .day-col { min-height: auto; }
+    .day-col.today { background: #fffbeb; }
+    .day-col.today .day-head { background: #f59e0b; }
+    .ev { break-inside: avoid; }
+    .kb-hint { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════ NAV ════════ -->
+<nav class="topbar" aria-label="Event filters">
+    <div class="topbar-left">
+        <img src="pubkey-logo.svg" alt="PubKey" class="logo-img">
+    </div>
+    <div class="topbar-right">
+        <select class="filter-btn" id="statusFilter" aria-label="Filter by status">
+            <option value="all">All Status</option>
+            <option value="definite">Definite</option>
+            <option value="tentative">Tentative</option>
+            <option value="prospect">Prospect</option>
+        </select>
+        <select class="filter-btn" id="locationFilter" aria-label="Filter by location">
+            <option value="all">All Locations</option>
+            <option value="nyc">NYC</option>
+            <option value="dc">DC</option>
+        </select>
+        <select class="filter-btn" id="roomFilter" aria-label="Filter by room">
+            <option value="all">All Rooms</option>
+        </select>
+        <span class="refresh-ts" id="lastRefresh"></span>
+    </div>
+</nav>
+
+<!-- ════════ PAGE ════════ -->
+<main class="page">
+    <h1 class="sr-only">PubKey Events Dashboard</h1>
+
+    <div class="error-banner" id="errorBanner"></div>
+
+    <!-- Stats — flat, inline, editorial -->
+    <div class="stats-bar">
+        <div class="stat">
+            <span class="stat-value" id="statTotal">&mdash;</span>
+            <span class="stat-label" id="statSub">this week</span>
+        </div>
+        <div class="stats-divider"></div>
+        <div class="stat">
+            <span class="stat-value nyc" id="statNYC">&mdash;</span>
+            <span class="stat-label">NYC</span>
+        </div>
+        <div class="stats-divider"></div>
+        <div class="stat">
+            <span class="stat-value dc" id="statDC">&mdash;</span>
+            <span class="stat-label">DC</span>
+        </div>
+    </div>
+
+    <!-- Week nav -->
+    <div class="week-bar">
+        <button class="week-btn" onclick="changeWeek(-1)" aria-label="Previous week">&#8249;</button>
+        <button class="week-btn" onclick="changeWeek(1)" aria-label="Next week">&#8250;</button>
+        <span class="week-label" id="weekLabel"></span>
+        <button class="today-btn" onclick="changeWeek(0)">Today</button>
+    </div>
+
+    <!-- Calendar -->
+    <div id="calendarContainer">
+        <div class="loading"><div class="spinner"></div><br>Loading events...</div>
+    </div>
+
+    <!-- Upcoming -->
+    <div class="section-row">
+        <span class="section-label">Upcoming</span>
+        <span class="section-count" id="upcomingCount"></span>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <colgroup>
+                <col class="c-date"><col class="c-time"><col class="c-event">
+                <col class="c-status"><col class="c-loc"><col class="c-room">
+                <col class="c-contact">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th><th>Time</th><th>Event</th>
+                    <th>Status</th><th>Loc</th><th>Room</th><th>Contact</th>
+                </tr>
+            </thead>
+            <tbody id="upcomingBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Rooms -->
+    <div class="section-row">
+        <span class="section-label">Rooms this week</span>
+    </div>
+    <div class="rooms-row" id="roomsGrid"></div>
+</main>
+
+<div class="kb-hint">
+    <kbd>&larr;</kbd><kbd>&rarr;</kbd> weeks &nbsp; <kbd>T</kbd> today
+</div>
+
+<!-- ════════ SCRIPT ════════ -->
+<script>
+let allItems = [];
+let weekOffset = 0;
+let activeStatusFilter = "all";
+let activeLocationFilter = "all";
+let activeRoomFilter = "all";
+
+/* ── API ── */
+function apiItemToLocal(item) {
+    var loc = item.location || '';
+    var locKey = item.locKey || (loc.toLowerCase().indexOf('dc') !== -1 ? 'dc' : 'nyc');
+    return {
+        name: item.name || '',
+        status: (item.status || '').toLowerCase(),
+        start: item.start || '',
+        end: item.end || null,
+        location: loc,
+        locKey: locKey,
+        room: item.room || '',
+        guest_count: item.guest_count || 0,
+        contact: item.contact || '',
+        eventStyle: item.event_style || '',
+        type: item.type || ''
+    };
+}
+
+function loadEvents() {
+    fetch("/api/events")
+        .then(function(res) {
+            if (!res.ok) throw new Error("API returned " + res.status);
+            return res.json();
+        })
+        .then(function(data) {
+            allItems = (data.items || []).map(apiItemToLocal);
+            allItems.sort(function(a, b) { return a.start.localeCompare(b.start); });
+            document.getElementById("statSub").textContent = data.source === "tripleseat" ? "live" : "this week";
+            populateRoomFilter();
+            renderWeek();
+        })
+        .catch(function(err) {
+            document.getElementById("errorBanner").textContent = "Failed to load events: " + err.message;
+            document.getElementById("errorBanner").style.display = "block";
+            document.getElementById("calendarContainer").innerHTML =
+                '<div class="loading" style="color:var(--red-soft)">Could not reach /api/events</div>';
+        });
+}
+
+/* ── Helpers ── */
+function getWeekRange(offset) {
+    var now = new Date();
+    var day = now.getDay();
+    var monday = new Date(now);
+    monday.setDate(now.getDate() - (day === 0 ? 6 : day - 1) + (offset * 7));
+    monday.setHours(0, 0, 0, 0);
+    var sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999);
+    return { start: monday, end: sunday };
+}
+
+function fmt(d) { return d.toISOString().slice(0, 10); }
+var _timeFmt = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+var _dateFmt = new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" });
+
+function fmtTime(iso) {
+    if (!iso) return "";
+    return _timeFmt.format(new Date(iso)).toLowerCase();
+}
+function fmtDate(iso) {
+    if (!iso) return "";
+    return _dateFmt.format(new Date(iso));
+}
+
+var _escEl = document.createElement("div");
+function esc(s) { _escEl.textContent = s; return _escEl.innerHTML; }
+
+function getFiltered() {
+    return allItems.filter(function(item) {
+        if (activeStatusFilter !== "all" && item.status !== activeStatusFilter) return false;
+        if (activeLocationFilter !== "all" && item.locKey !== activeLocationFilter) return false;
+        if (activeRoomFilter !== "all" && item.room !== activeRoomFilter) return false;
+        return true;
+    });
+}
+
+function getWeekItems(items, range) {
+    return items.filter(function(item) {
+        var d = new Date(item.start);
+        return d >= range.start && d <= range.end;
+    });
+}
+
+function populateRoomFilter() {
+    var rooms = [], seen = {};
+    allItems.forEach(function(i) {
+        if (i.room && !seen[i.room]) { rooms.push(i.room); seen[i.room] = true; }
+    });
+    rooms.sort();
+    var sel = document.getElementById("roomFilter");
+    var current = sel.value;
+    sel.innerHTML = '<option value="all">All Rooms</option>';
+    rooms.forEach(function(r) {
+        var opt = document.createElement("option");
+        opt.value = r; opt.textContent = r;
+        sel.appendChild(opt);
+    });
+    sel.value = rooms.indexOf(current) !== -1 ? current : "all";
+    activeRoomFilter = sel.value;
+}
+
+/* ── Render ── */
+function renderWeek() {
+    var range = getWeekRange(weekOffset);
+    var opts = { month: "short", day: "numeric" };
+    var endOpts = { month: "short", day: "numeric", year: "numeric" };
+    document.getElementById("weekLabel").textContent =
+        range.start.toLocaleDateString("en-US", opts) + " – " + range.end.toLocaleDateString("en-US", endOpts);
+    document.getElementById("lastRefresh").textContent =
+        new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    render();
+}
+
+function render() {
+    var range = getWeekRange(weekOffset);
+    var items = getFiltered();
+    var weekItems = getWeekItems(items, range);
+    document.getElementById("statTotal").textContent = weekItems.length;
+    var nycCount = 0, dcCount = 0;
+    weekItems.forEach(function(item) {
+        if (item.locKey === 'nyc') nycCount++; else if (item.locKey === 'dc') dcCount++;
+    });
+    document.getElementById("statNYC").textContent = nycCount;
+    document.getElementById("statDC").textContent = dcCount;
+    renderCalendar(weekItems, range);
+    renderUpcoming(items);
+    renderRooms(weekItems);
+}
+
+var _dayDateFmt = new Intl.DateTimeFormat("en-US", { day: "numeric" });
+var _dayMonFmt = new Intl.DateTimeFormat("en-US", { month: "short" });
+
+function renderCalendar(items, range) {
+    var today = fmt(new Date());
+    var grouped = {};
+    for (var i = 0; i < 7; i++) {
+        var d = new Date(range.start);
+        d.setDate(range.start.getDate() + i);
+        grouped[fmt(d)] = [];
+    }
+    items.forEach(function(item) {
+        var key = item.start.slice(0, 10);
+        if (grouped[key]) grouped[key].push(item);
+    });
+
+    if (items.length === 0) {
+        document.getElementById("calendarContainer").innerHTML =
+            '<div class="calendar"><div class="empty-week">' +
+            '<div class="empty-icon">∅</div>' +
+            '<div class="empty-text">No events this week</div>' +
+            '<div class="empty-sub">Try a different week or adjust your filters</div>' +
+            '</div></div>';
+        return;
     }
 
-    *:focus-visible {
-      outline: 2px solid var(--orange);
-      outline-offset: 2px;
-      border-radius: 4px;
+    var parts = ['<div class="calendar">'];
+    var dayNames = ["MON","TUE","WED","THU","FRI","SAT","SUN"];
+
+    for (var i = 0; i < 7; i++) {
+        var d = new Date(range.start);
+        d.setDate(range.start.getDate() + i);
+        var key = fmt(d);
+        var isToday = key === today;
+        var dayItems = (grouped[key] || []).sort(function(a, b) { return a.start.localeCompare(b.start); });
+        var count = dayItems.length;
+
+        parts.push(
+            '<div class="day-col', isToday ? ' today' : '', '">',
+            '<div class="day-head">',
+            '<div class="day-head-info">',
+            '<span class="dname">', dayNames[i], '</span>',
+            '<span class="dnum">', _dayDateFmt.format(d), '</span>',
+            '</div>',
+            count > 0 ? '<span class="day-count">' + count + '</span>' : '',
+            '</div>',
+            '<div class="day-body">'
+        );
+
+        if (dayItems.length === 0) {
+            parts.push('<div class="empty-day">·</div>');
+        } else {
+            for (var j = 0; j < dayItems.length; j++) {
+                var item = dayItems[j];
+                var isDC = item.locKey === 'dc';
+                var sc = item.status.replace(/\s+/g, "-");
+                var ts = fmtTime(item.start);
+                var te = fmtTime(item.end);
+
+                parts.push(
+                    '<div class="ev', isDC ? ' dc' : '', '">',
+                    '<div class="ev-top">',
+                    '<span class="loc-pip', isDC ? ' dc' : '', '"></span>',
+                    '<span class="status-dot ', sc, '"></span>',
+                    '<span class="ev-name">', esc(item.name), '</span>',
+                    '</div>',
+                    '<div class="ev-time">', te ? ts + ' – ' + te : ts, '</div>'
+                );
+                if (item.room) parts.push('<div class="ev-room">', esc(item.room), '</div>');
+                parts.push('</div>');
+            }
+        }
+        parts.push('</div></div>');
     }
+    parts.push('</div>');
+    document.getElementById("calendarContainer").innerHTML = parts.join('');
+}
 
-  </style>
-  </head>
-  <body>
-    <div id="root"></div>
-    <div id="sheet-root"></div>
+function renderUpcoming(items) {
+    var now = new Date(); now.setHours(0, 0, 0, 0);
+    var upcoming = items
+        .filter(function(i) { return new Date(i.start) >= now; })
+        .sort(function(a, b) { return a.start.localeCompare(b.start); })
+        .slice(0, 25);
 
-    <!-- Staff badge -->
-    <div id="staff-badge">STAFF</div>
+    var tbody = document.getElementById("upcomingBody");
+    var countEl = document.getElementById("upcomingCount");
+    if (countEl) countEl.textContent = upcoming.length ? upcoming.length : '';
 
-    <!-- Wake lock status -->
-    <div id="wake-lock-status"></div>
+    if (upcoming.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-row">No upcoming events</td></tr>';
+        return;
+    }
+    tbody.innerHTML = upcoming.map(function(item) {
+        var sc = item.status.replace(/\s+/g, "-");
+        return '<tr>' +
+            '<td>' + fmtDate(item.start) + '</td>' +
+            '<td class="time-cell">' + fmtTime(item.start) + (item.end ? ' – ' + fmtTime(item.end) : '') + '</td>' +
+            '<td class="name-cell">' + esc(item.name) + '</td>' +
+            '<td><span class="tag ' + sc + '">' + esc(item.status) + '</span></td>' +
+            '<td><span class="tag ' + item.locKey + '">' + (item.locKey === 'dc' ? 'DC' : 'NYC') + '</span></td>' +
+            '<td>' + esc(item.room || '—') + '</td>' +
+            '<td>' + esc(item.contact || '—') + '</td>' +
+            '</tr>';
+    }).join('');
+}
 
-    <script>
-    (function() {
-      'use strict';
+function renderRooms(items) {
+    var rooms = {};
+    items.forEach(function(item) {
+        if (item.room) rooms[item.room] = (rooms[item.room] || 0) + 1;
+    });
+    var sorted = Object.entries(rooms).sort(function(a, b) { return b[1] - a[1]; });
+    var grid = document.getElementById("roomsGrid");
+    if (sorted.length === 0) {
+        grid.innerHTML = '<div style="color:var(--text-tertiary);font-size:11px;">No room bookings this week</div>';
+        return;
+    }
+    grid.innerHTML = sorted.map(function(pair) {
+        return '<div class="room-chip">' +
+            '<span class="r-count">' + pair[1] + '</span>' +
+            '<span class="r-name">' + esc(pair[0]) + '</span>' +
+            '</div>';
+    }).join('');
+}
 
-      // ── WAKE LOCK ──
-      let wakeLock = null;
-      const wakeLockEl = document.getElementById('wake-lock-status');
+function changeWeek(dir) {
+    if (dir === 0) weekOffset = 0; else weekOffset += dir;
+    renderWeek();
+}
 
-      async function requestWakeLock() {
-        if (!('wakeLock' in navigator)) return;
-        try {
-          wakeLock = await navigator.wakeLock.request('screen');
-          wakeLockEl.textContent = '☀ SCREEN ON';
-          wakeLockEl.classList.add('visible', 'active');
-          setTimeout(() => wakeLockEl.classList.remove('visible'), 3000);
-          wakeLock.addEventListener('release', () => {
-            wakeLockEl.textContent = '🌙 SCREEN OFF';
-            wakeLockEl.classList.remove('active');
-            wakeLockEl.classList.add('visible');
-            setTimeout(() => wakeLockEl.classList.remove('visible'), 2000);
-          });
-        } catch (e) {}
-      }
+/* ── Filters ── */
+document.getElementById("statusFilter").addEventListener("change", function() {
+    activeStatusFilter = this.value; render();
+});
+document.getElementById("locationFilter").addEventListener("change", function() {
+    activeLocationFilter = this.value; render();
+});
+document.getElementById("roomFilter").addEventListener("change", function() {
+    activeRoomFilter = this.value; render();
+});
 
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') requestWakeLock();
-      });
-      requestWakeLock();
+/* ── Keyboard ── */
+document.addEventListener("keydown", function(e) {
+    if (e.target.tagName === "SELECT" || e.target.tagName === "INPUT") return;
+    if (e.key === "ArrowLeft") { changeWeek(-1); e.preventDefault(); }
+    else if (e.key === "ArrowRight") { changeWeek(1); e.preventDefault(); }
+    else if (e.key === "t" || e.key === "T") { changeWeek(0); }
+});
 
-      // ── KEYBOARD SHORTCUTS ──
-      document.addEventListener('keydown', (e) => {
-        if (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key === 'k')) {
-          e.preventDefault();
-          const input = document.querySelector('.page-scroll input[type="text"], .page-scroll input[placeholder*="earch"]');
-          if (input) { input.focus(); input.select(); }
-        }
-        if (e.key === 'Escape') {
-          const backdrop = document.querySelector('.sheet-backdrop');
-          if (backdrop) backdrop.click();
-        }
-      });
-
-      // ── HAPTIC ON SHEET OPEN ──
-      const sheetRoot = document.getElementById('sheet-root');
-      if (sheetRoot) {
-        new MutationObserver((mutations) => {
-          for (const m of mutations) {
-            for (const node of m.addedNodes) {
-              if (node.classList?.contains('sheet-panel') && navigator.vibrate) {
-                navigator.vibrate(10);
-              }
-            }
-          }
-        }).observe(sheetRoot, { childList: true, subtree: true });
-      }
-
-      // ── CONTENT ENHANCEMENTS ──
-      // Runs on every content change: sorts categories, strips count numbers,
-      // hides distributor noise, and scrolls to top on tab switch.
-
-      let lastContentKey = '';
-
-      function enhanceContent() {
-        const pageScroll = document.querySelector('.page-scroll');
-        if (!pageScroll) return;
-
-        sortCategoryItems(pageScroll);
-        stripCategoryCounts(pageScroll);
-        dimDistributorCodes(pageScroll);
-        enhanceQuickBuild(pageScroll);
-        fixAlphaIndex();
-      }
-
-      function fixAlphaIndex() {
-        const ai = document.querySelector('.alpha-index');
-        if (!ai) return;
-
-        Array.from(ai.children).forEach(btn => {
-          Object.assign(btn.style, {
-            all: 'unset',
-            display: 'block',
-            color: '#5c564e',
-            fontFamily: '"Barlow Condensed", sans-serif',
-            fontSize: '8px',
-            fontWeight: '700',
-            padding: '1px 6px',
-            margin: '0',
-            lineHeight: '1.2',
-            textAlign: 'center',
-            cursor: 'pointer',
-            width: 'auto',
-            height: 'auto',
-            minHeight: '0',
-            minWidth: '0',
-            maxHeight: 'none',
-            maxWidth: 'none',
-            boxSizing: 'content-box',
-            border: 'none',
-            background: 'none',
-            borderRadius: '0',
-            WebkitTapHighlightColor: 'transparent',
-          });
-        });
-      }
-
-      // Sort Spirits & Mods items A-Z within each category
-      function sortCategoryItems(pageScroll) {
-        const wrapper = findCategoryWrapper(pageScroll);
-        if (!wrapper) return;
-
-        Array.from(wrapper.children).forEach(cat => {
-          const items = Array.from(cat.children).slice(1);
-          if (items.length < 2 || items[0]?.tagName === 'SPAN') return;
-
-          const getName = (el) => {
-            const nameDiv = el.children?.[1]?.children?.[0];
-            return (nameDiv?.textContent || '').trim().toLowerCase();
-          };
-
-          const names = items.map(getName);
-          const sorted = [...names].sort((a, b) => a.localeCompare(b));
-          if (names.every((n, i) => n === sorted[i])) return;
-
-          items
-            .sort((a, b) => getName(a).localeCompare(getName(b)))
-            .forEach(item => cat.appendChild(item));
-        });
-      }
-
-      // Strip trailing count from category headers: "BOURBON6" → "BOURBON"
-      function stripCategoryCounts(pageScroll) {
-        const wrapper = findCategoryWrapper(pageScroll);
-        if (!wrapper) return;
-
-        Array.from(wrapper.children).forEach(cat => {
-          const header = cat.children?.[0];
-          if (!header) return;
-          // The header has a structure like: <div><span>BOURBON</span><span>6</span></div>
-          // OR it might be a single text node like "BOURBON6"
-          // Find the count span — it's usually the last child with just a number
-          const kids = Array.from(header.children);
-          kids.forEach(kid => {
-            const txt = kid.textContent?.trim();
-            if (txt && /^\d+$/.test(txt) && !kid.dataset.enhanced) {
-              kid.style.opacity = '0.25';
-              kid.style.fontSize = '10px';
-              kid.style.marginLeft = '6px';
-              kid.dataset.enhanced = '1';
-            }
-          });
-        });
-      }
-
-      // Further dim distributor codes (RNDC, SGWS, DOPS, Breakthru)
-      function dimDistributorCodes(pageScroll) {
-        const wrapper = findCategoryWrapper(pageScroll);
-        if (!wrapper) return;
-
-        Array.from(wrapper.children).forEach(cat => {
-          Array.from(cat.children).slice(1).forEach(item => {
-            // Distributor code is the last direct child div with mono font
-            const lastDiv = item.children?.[item.children.length - 1];
-            if (!lastDiv || lastDiv.dataset.dimmed) return;
-            const style = lastDiv.getAttribute('style') || '';
-            if (style.includes('font-mono') && (style.includes('11px') || style.includes('13px')) && style.includes('flex-shrink')) {
-              lastDiv.style.opacity = '0.15';
-              lastDiv.style.fontSize = '9px';
-              lastDiv.dataset.dimmed = '1';
-            }
-          });
-        });
-      }
-
-      // Enhance Quick Build text — bold key terms, highlight measurements
-      function enhanceQuickBuild(pageScroll) {
-        const qbs = pageScroll.querySelectorAll('.quick-build-text');
-        qbs.forEach(qb => {
-          if (qb.dataset.enhanced) return;
-          qb.dataset.enhanced = '1';
-
-          let html = qb.textContent;
-
-          // Escape HTML entities
-          html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-          // Bold ALL-CAPS words (2+ chars, not already in a tag)
-          // Match sequences like "MARTINI BATCH", "BIG ROCK", "COUPE", "UP", "OR"
-          html = html.replace(/\b([A-Z][A-Z0-9]{1,}(?:\s+[A-Z][A-Z0-9]{1,})*)\b/g, '<b>$1</b>');
-
-          // Highlight measurements: "3 oz", "1.5 oz", "½ oz" etc — orange color
-          html = html.replace(/(\d+\.?\d*\s*oz)\b/gi, '<span class="qb-measure">$1</span>');
-
-          // Style the "— OR —" separator
-          html = html.replace(/(—\s*OR\s*—)/g, '<span class="qb-or">$1</span>');
-
-          // Style "Ask guest:" or "Garnish:" prefixes
-          html = html.replace(/^(Ask guest:|Garnish:)/gm, '<span class="qb-prompt">$1</span>');
-
-          // Convert newlines to <br>
-          html = html.replace(/\n/g, '<br>');
-
-          qb.innerHTML = html;
-        });
-      }
-
-      function findCategoryWrapper(pageScroll) {
-        return Array.from(pageScroll.children).find(c => {
-          const firstKid = c.children?.[0];
-          if (!firstKid) return false;
-          const fc = firstKid.children?.[0];
-          if (!fc) return false;
-          const txt = fc.textContent || '';
-          return /^[A-Z &\-]+\d+$/.test(txt.trim()) || txt.trim() === 'TIER:';
-        });
-      }
-
-      // ── MAIN OBSERVER ──
-      const root = document.getElementById('root');
-      if (root) {
-        new MutationObserver(() => {
-          const pageScroll = document.querySelector('.page-scroll');
-          if (!pageScroll) return;
-
-          const firstHeader = pageScroll.querySelector('div > div:first-child');
-          const key = firstHeader ? firstHeader.textContent.substring(0, 20) : '';
-          if (key && key !== lastContentKey) {
-            lastContentKey = key;
-            if (pageScroll.scrollTop > 200) {
-              pageScroll.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-            enhanceContent();
-          }
-        }).observe(root, { childList: true, subtree: true });
-
-        setTimeout(enhanceContent, 500);
-        setTimeout(injectPubKeyLogo, 300);
-      }
-
-      // ── PUBKEY LOGO ──
-      function injectPubKeyLogo() {
-        const appShell = document.querySelector('.app-shell');
-        if (!appShell) return;
-        const topBar = appShell.querySelector('div:first-child');
-        if (!topBar) return;
-
-        // Find the "PUB KEY" text span
-        const spans = topBar.querySelectorAll('span');
-        let target = null;
-        for (const s of spans) {
-          if (s.textContent.trim() === 'PUB KEY') { target = s; break; }
-        }
-        if (!target || target.dataset.logoInjected) return;
-        target.dataset.logoInjected = '1';
-
-        // Replace text with inline SVG logo
-        target.innerHTML = '<svg width="70" height="19" viewBox="0 0 400 110" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; display: inline-block; margin-top: -2px;"><g clip-path="url(#pklogo)"><path d="M84.4836 27.3167C84.4836 19.7689 82.3358 13.2702 78.2701 8.53279C73.7929 3.31356 67.1894 0.556732 59.1647 0.556732C48.4527 0.556732 38.9213 4.38952 31.9599 7.18382C27.8033 8.85397 24.2183 10.2939 21.953 10.2939C21.4936 10.2939 21.0608 10.492 20.7616 10.84C20.4624 11.1879 20.3289 11.6483 20.3983 12.1033C20.9166 15.6149 22.2416 19.0676 24.2451 22.1296C22.498 27.3113 19.6397 34.7414 16.3486 43.2795C10.6266 58.1342 4.13526 74.975 1.00446 86.5643C-0.983013 93.4644 3.72767e-05 98.8657 3.90553 102.586C6.52877 105.214 12.2882 108.581 16.4768 109.93C16.6371 109.979 16.7974 110.005 16.9577 110.005C17.2942 110.005 17.6255 109.898 17.9033 109.69C18.3093 109.384 18.5498 108.897 18.5337 108.389C18.4589 105.263 20.19 96.6763 28.626 73.6742C32.4781 79.7285 37.2544 81.0079 45.589 78.6418C56.0179 75.5745 65.7896 68.6102 73.093 59.0282C80.4445 49.382 84.4889 38.1245 84.4889 27.322L84.4836 27.3167ZM37.8368 49.5426C39.0015 46.5502 40.0914 43.7613 41.0584 41.2346C43.3077 35.2981 44.2426 30.6302 41.9827 26.5458C42.9283 26.2461 43.9007 25.9195 44.9051 25.5823C48.7999 24.2708 52.8283 22.9165 56.2476 22.9165C61.601 22.9165 62.7229 26.5191 62.7229 29.5435C62.7229 34.8431 58.935 41.529 52.5879 47.4281C47.1117 52.5189 40.5722 56.2874 34.5991 57.8719C35.7211 54.9706 36.8057 52.1816 37.8314 49.5426H37.8368Z" fill="currentColor"/><path d="M146.667 7.45682C143.392 4.74281 137.894 1.88428 133.898 0.256951C133.412 0.0588879 132.861 0.117772 132.423 0.406837C131.985 0.695902 131.729 1.19374 131.729 1.71834C131.729 9.4428 126.712 29.6881 117.127 53.4342C110.93 68.835 103.749 84.5837 97.4823 84.5837C95.7138 84.5837 94.4743 83.1758 94.4743 81.1524C94.4743 74.9054 99.5178 62.8128 104.855 50.0083C107.997 42.4712 111.245 34.6825 113.82 27.3006C116.908 18.8802 116.176 11.9534 111.758 7.79941C108.884 5.064 104.177 2.03417 100.052 0.262304C99.5712 0.0588879 99.0209 0.101712 98.5775 0.385425C98.1394 0.669137 97.8669 1.15091 97.8562 1.67551C97.7494 6.08108 93.5287 16.6641 88.6348 28.9172C81.3581 47.1444 72.3076 69.8307 72.3076 83.936C72.3076 99.9095 80.7864 109.443 94.9872 109.443C107.468 109.443 117.806 102.554 126.594 88.3897C135.148 74.6752 143.568 53.0167 149.696 28.944C152.159 18.9445 152.453 12.2264 146.672 7.45146L146.667 7.45682Z" fill="currentColor"/><path d="M197.834 45.8329C209.726 39.4199 217.217 28.9119 217.217 18.27C217.217 11.6536 214.412 0.551361 195.648 0.551361C184.958 0.551361 174.529 4.37345 166.91 7.16239C162.326 8.84325 158.362 10.2939 156.075 10.2939C155.616 10.2939 155.183 10.492 154.884 10.8399C154.585 11.1879 154.451 11.6483 154.521 12.1033C155.06 15.7487 156.455 19.3245 158.474 22.2634C156.535 27.4184 153.254 35.5818 149.792 44.2002C145.673 54.446 141.415 65.045 138.909 71.838C134.753 83.042 133.38 88.6306 137.686 95.1024C143.253 103.55 152.816 109.443 160.937 109.443C170.885 109.443 182.666 104.026 192.448 94.9526C202.717 85.4295 208.61 73.9097 208.61 63.3427C208.61 55.4791 204.41 48.8574 197.834 45.8275V45.8329ZM185.049 62.0955C185.049 66.0353 181.603 71.3188 176.062 75.8849C170.591 80.3922 163.795 83.6362 157.08 85.0012C159.377 78.6043 162.641 69.8735 165.916 61.3514C171.59 59.0496 176.442 57.8344 179.962 57.8344C183.291 57.8344 185.049 59.3065 185.049 62.0955ZM173.316 41.1168C173.813 39.6983 174.246 38.4778 174.641 37.4393C175.865 33.9598 176.767 30.2876 175.48 26.7385C176.543 26.3852 177.617 26.0052 178.664 25.6411C182.879 24.1637 187.234 22.6381 190.509 22.6381C191.973 22.6381 192.822 23.061 192.822 25.2343C192.822 29.5756 186.71 36.1438 173.145 41.604C173.204 41.4434 173.257 41.2774 173.316 41.1222V41.1168Z" fill="currentColor"/><path d="M395.469 6.47184C395.469 6.47184 395.443 6.45043 395.427 6.43972C393.124 4.71068 389.379 2.30181 384.581 0.647714C384.095 0.481769 383.561 0.556711 383.144 0.861836C382.727 1.16161 382.481 1.64338 382.487 2.15728C382.62 16.2144 369.392 45.4046 358.894 54.2104C356.313 56.3677 354.71 56.5979 354.342 56.3731C354.144 56.2553 353.941 55.5647 354.224 54.2265C355.234 49.5533 357.654 43.3116 359.994 37.2787C361.741 32.7768 363.547 28.125 364.744 24.1637C366.678 17.7936 366.902 12.4833 361.682 7.25874C358.68 4.40021 354.849 1.94851 351.163 0.529946C350.698 0.353295 350.18 0.401473 349.758 0.669126C349.336 0.936779 349.068 1.38108 349.026 1.87892C348.577 7.39257 345.206 15.6845 341.476 24.5866C341.418 18.5376 339.954 11.7874 337.705 7.28015C335.45 2.76217 331.491 0.562065 325.603 0.562065C318.674 0.562065 311.509 2.04486 305.189 3.35101C298.153 4.80704 291.507 6.17742 287.467 4.94622C286.976 4.79633 286.442 4.89269 286.041 5.21387C285.635 5.5297 285.411 6.02218 285.437 6.53608C285.726 12.3495 287.291 18.0666 288.643 21.4872C278.364 46.941 271.327 65.9764 267.732 78.069C265.643 84.9851 265.856 90.1669 268.405 94.8508C268.496 95.0221 268.586 95.1774 268.677 95.3487C265.311 93.5554 260.012 85.8845 253.109 60.5645C273.78 42.3213 286.089 26.3477 286.089 17.7347C286.089 11.6643 281.585 5.7813 272.711 0.25694C272.219 -0.0481841 271.605 -0.0588902 271.103 0.224822C270.601 0.508534 270.296 1.04384 270.301 1.62197C270.424 9.48561 260.049 24.9238 242.258 43.5418C244.828 36.3633 247.088 29.6934 248.674 24.5866C250.731 17.7186 251.907 10.7436 246.66 6.23631C243.732 3.74178 240.201 1.82539 235.863 0.374708C235.382 0.214116 234.853 0.294412 234.442 0.594183C234.03 0.888601 233.784 1.37038 233.784 1.87356C233.784 7.21592 226.219 26.5619 218.9 45.2708C212.852 60.7304 206.601 76.7147 203.988 86.3127C201.707 94.4547 203.283 100.381 208.658 103.914C211.831 106.033 216.608 108.159 219.706 109.24C219.877 109.299 220.048 109.326 220.225 109.326C220.577 109.326 220.919 109.208 221.202 108.983C221.624 108.646 221.849 108.116 221.79 107.58C221.288 102.805 228.324 82.3461 233.052 69.0919C234.89 82.2176 238.363 95.3433 241.75 101.408C245.431 108.169 251.757 109.984 259.093 106.387C262.891 104.556 266.668 101.601 269.735 98.068C269.842 97.9449 269.922 97.8004 269.986 97.6505C274.565 105.3 279.288 109.047 284.374 109.047C290.064 109.047 296.817 107.527 303.341 106.055C310.27 104.492 317.434 102.875 320.058 104.16C320.581 104.417 321.206 104.363 321.677 104.015C322.147 103.673 322.392 103.095 322.307 102.516C322.152 101.414 321.981 100.306 321.794 99.2082C325.074 105.894 331.721 109.465 341.295 109.465C355.143 109.465 369.002 99.1708 378.362 81.9339C386.964 66.228 396.089 38.4457 399.215 22.3544C400.652 15.0046 400.47 10.5348 395.464 6.49325L395.469 6.47184ZM307.7 78.6043C301.663 78.6043 295.904 80.1995 290.331 81.7466C289.941 81.8536 289.556 81.9607 289.166 82.0677C290.657 77.6675 292.399 72.6892 294.194 67.7055C309.239 63.3749 318.642 61.8439 322.147 63.1607C322.633 63.3427 323.172 63.2731 323.6 62.9787C324.027 62.6843 324.278 62.1972 324.278 61.6833C324.278 57.7274 323.359 52.4064 322.088 49.0126C320.442 44.7194 317.552 42.9529 312.749 43.2741C310.633 43.3972 306.925 44.0128 302.844 44.8907C303.763 42.4979 304.703 40.2336 305.552 38.2208C307.011 34.6878 307.428 31.6901 306.808 29.2598C310.569 28.8637 314.672 28.1196 318.658 27.4023C326.982 25.9034 335.583 24.3511 339.152 26.337C339.639 26.61 340.237 26.6047 340.718 26.3156C340.745 26.2996 340.761 26.2782 340.782 26.2621C340.777 26.2835 340.766 26.2996 340.761 26.321C335.61 38.5848 330.289 51.2662 330.289 60.709C330.289 70.1518 336.054 75.9224 344.639 75.9224C350.319 75.9224 356.511 73.2512 361.907 68.7707C355.773 78.6097 348.662 83.8931 341.305 83.8931C334.429 83.8931 328.868 79.4983 327.142 72.6999C326.998 72.1217 326.538 71.6775 325.956 71.549C325.374 71.4205 324.77 71.6293 324.396 72.095C321.303 75.8957 319.459 81.7305 319.459 87.6992C319.459 88.3576 319.481 88.9946 319.518 89.6263C317.344 83.2668 313.839 78.6097 307.711 78.6097L307.7 78.6043Z" fill="currentColor"/></g><defs><clipPath id="pklogo"><rect width="400" height="110" fill="white"/></clipPath></defs></svg>';
-        target.style.color = 'var(--text-primary)';
-        target.style.lineHeight = '0';
-
-        // Make the section title (COCKTAILS, SPIRITS, etc) orange
-        const siblings = topBar.querySelectorAll('span[style*="font-headline"]');
-        siblings.forEach(s => {
-          if (s !== target && !s.dataset.logoInjected) {
-            s.style.color = '#eb5528';
-          }
-        });
-      }
-
-    })();
-    </script>
-
-</body></html>
+/* ── Init ── */
+loadEvents();
+</script>
+</body>
+</html>
