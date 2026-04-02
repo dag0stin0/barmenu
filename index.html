@@ -519,29 +519,60 @@
       margin-bottom: 8px !important;
     }
 
-    /* Quick Build — reads like spoken instructions, not a code dump */
+    /* Quick Build — tight, scannable, spoken-cadence line height */
     .quick-build-text {
       color: var(--text-primary) !important;
-      font-size: 1.1rem !important;
-      line-height: 2.2 !important;
-      letter-spacing: 0.015em;
-      word-spacing: 0.06em;
-      padding: 20px 12px !important;
+      font-size: 1rem !important;
+      line-height: 1.8 !important;
+      letter-spacing: 0.01em;
+      word-spacing: 0.04em;
+      padding: 4px 0 0 !important;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Quick Build container — elevated, highlighted */
+    /* Quick Build container — compact, orange accent */
     div[style*="background"]:has(> .quick-build-text),
     div[style*="background"]:has(> span[style*="QUICK BUILD"]),
     div:has(> span[style*="font-size: 11px"][style*="letter-spacing"]):has(~ .quick-build-text) {
       border-left: 3px solid var(--orange) !important;
       border-radius: 0 8px 8px 0 !important;
+      padding: 14px 16px !important;
+      margin: 12px 16px !important;
+    }
+
+    /* QUICK BUILD label — tight to content */
+    div[style*="background"]:has(> .quick-build-text) > div:first-child {
+      margin-bottom: 4px !important;
     }
 
     /* "QUICK BUILD" label — make it pop */
     span[style*="QUICK BUILD"],
     span[style*="font-size: 11px"][style*="letter-spacing: 0.1em"] {
       color: var(--orange-vibrant) !important;
+    }
+
+    /* Quick Build — enhanced inline styles */
+    .quick-build-text b {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .quick-build-text .qb-measure {
+      color: var(--orange-vibrant);
+      font-weight: 700;
+    }
+
+    .quick-build-text .qb-or {
+      display: block;
+      color: var(--text-tertiary);
+      font-size: 0.8em;
+      letter-spacing: 0.1em;
+      margin: 4px 0;
+    }
+
+    .quick-build-text .qb-prompt {
+      color: var(--orange);
+      font-weight: 600;
     }
 
     /* Service Notes container — distinct from Quick Build */
@@ -985,6 +1016,7 @@
         sortCategoryItems(pageScroll);
         stripCategoryCounts(pageScroll);
         dimDistributorCodes(pageScroll);
+        enhanceQuickBuild(pageScroll);
       }
 
       // Sort Spirits & Mods items A-Z within each category
@@ -1052,6 +1084,38 @@
               lastDiv.dataset.dimmed = '1';
             }
           });
+        });
+      }
+
+      // Enhance Quick Build text — bold key terms, highlight measurements
+      function enhanceQuickBuild(pageScroll) {
+        const qbs = pageScroll.querySelectorAll('.quick-build-text');
+        qbs.forEach(qb => {
+          if (qb.dataset.enhanced) return;
+          qb.dataset.enhanced = '1';
+
+          let html = qb.textContent;
+
+          // Escape HTML entities
+          html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+          // Bold ALL-CAPS words (2+ chars, not already in a tag)
+          // Match sequences like "MARTINI BATCH", "BIG ROCK", "COUPE", "UP", "OR"
+          html = html.replace(/\b([A-Z][A-Z0-9]{1,}(?:\s+[A-Z][A-Z0-9]{1,})*)\b/g, '<b>$1</b>');
+
+          // Highlight measurements: "3 oz", "1.5 oz", "½ oz" etc — orange color
+          html = html.replace(/(\d+\.?\d*\s*oz)\b/gi, '<span class="qb-measure">$1</span>');
+
+          // Style the "— OR —" separator
+          html = html.replace(/(—\s*OR\s*—)/g, '<span class="qb-or">$1</span>');
+
+          // Style "Ask guest:" or "Garnish:" prefixes
+          html = html.replace(/^(Ask guest:|Garnish:)/gm, '<span class="qb-prompt">$1</span>');
+
+          // Convert newlines to <br>
+          html = html.replace(/\n/g, '<br>');
+
+          qb.innerHTML = html;
         });
       }
 
