@@ -151,26 +151,26 @@
 
     /* Sub-tabs — minimal, not boxy */
     .flex.bg-surface,
-    .page-scroll > div:first-child {
+    .page-scroll > div:first-child > div:not(.alpha-index) {
       background: transparent !important;
       border-bottom: 0.5px solid rgba(200, 170, 130, 0.06) !important;
       padding: 0 8px !important;
     }
 
     .flex.bg-surface button[style*="border-bottom: 2px solid"],
-    .page-scroll > div:first-child button[style*="border-bottom: 2px solid"] {
+    .page-scroll > div:first-child > div:not(.alpha-index) button[style*="border-bottom: 2px solid"] {
       text-shadow: none;
       border-bottom-width: 1.5px !important;
     }
 
     .flex.bg-surface button[style*="border-color: currentcolor currentcolor transparent"],
-    .page-scroll > div:first-child button[style*="border-color: currentcolor currentcolor transparent"] {
+    .page-scroll > div:first-child > div:not(.alpha-index) button[style*="border-color: currentcolor currentcolor transparent"] {
       color: var(--text-tertiary) !important;
       opacity: 0.7;
     }
 
     .flex.bg-surface button,
-    .page-scroll > div:first-child button {
+    .page-scroll > div:first-child > div:not(.alpha-index) button {
       transition: color 200ms var(--spring), border-color 200ms var(--spring), opacity 200ms ease !important;
       -webkit-tap-highlight-color: transparent;
       min-height: 48px;
@@ -755,19 +755,22 @@
        ALPHA INDEX
        ═══════════════════════════════ */
 
-    .alpha-index { right: 2px !important; }
-
-    .alpha-index button {
-      color: var(--text-tertiary) !important;
-      font-size: 10px !important;
-      padding: 3px 6px !important;
-      min-width: 24px;
-      min-height: 20px;
-      transition: color 100ms ease;
+    .alpha-index {
+      right: 2px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      height: auto !important;
+      max-height: calc(100vh - 200px) !important;
+      z-index: 20 !important;
+      gap: 0 !important;
+      align-items: center !important;
+      justify-content: center !important;
+      pointer-events: auto;
     }
 
     .alpha-index button:active {
       color: var(--orange-vibrant) !important;
+      transform: scale(1.4);
     }
 
     /* ═══════════════════════════════
@@ -1017,6 +1020,39 @@
         stripCategoryCounts(pageScroll);
         dimDistributorCodes(pageScroll);
         enhanceQuickBuild(pageScroll);
+        fixAlphaIndex();
+      }
+
+      function fixAlphaIndex() {
+        const ai = document.querySelector('.alpha-index');
+        if (!ai) return;
+
+        Array.from(ai.children).forEach(btn => {
+          Object.assign(btn.style, {
+            all: 'unset',
+            display: 'block',
+            color: '#5c564e',
+            fontFamily: '"Barlow Condensed", sans-serif',
+            fontSize: '8px',
+            fontWeight: '700',
+            padding: '1px 6px',
+            margin: '0',
+            lineHeight: '1.2',
+            textAlign: 'center',
+            cursor: 'pointer',
+            width: 'auto',
+            height: 'auto',
+            minHeight: '0',
+            minWidth: '0',
+            maxHeight: 'none',
+            maxWidth: 'none',
+            boxSizing: 'content-box',
+            border: 'none',
+            background: 'none',
+            borderRadius: '0',
+            WebkitTapHighlightColor: 'transparent',
+          });
+        });
       }
 
       // Sort Spirits & Mods items A-Z within each category
