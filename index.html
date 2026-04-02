@@ -448,18 +448,7 @@
        TEXTURE — barely-there warmth
        ═══════════════════════════════ */
 
-    /* Subtle noise — lighter than before, Apple-precision */
-    .app-shell::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 100;
-      opacity: 0.018;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      mix-blend-mode: soft-light;
-    }
+    /* Film grain removed — imperceptible at 1.8%, saves a GPU compositing layer */
 
     /* ═══════════════════════════════
        GLOBAL TYPOGRAPHY
@@ -604,25 +593,6 @@
       padding-block: 10px !important;
     }
 
-    /* ── STAFF BADGE: Visual "this is the bar ref" cue ── */
-    #staff-badge {
-      position: fixed;
-      top: calc(var(--safe-top) + 6px);
-      right: 12px;
-      z-index: 50;
-      font-family: "Space Mono", monospace;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      color: var(--orange);
-      background: rgba(235, 85, 40, 0.08);
-      border: 0.5px solid rgba(235, 85, 40, 0.2);
-      padding: 3px 8px;
-      border-radius: 4px;
-      pointer-events: none;
-      -webkit-font-smoothing: antialiased;
-    }
-
     /* ── ALPHA INDEX: Slightly larger for bar use ── */
     .alpha-index button {
       font-size: 10px !important;
@@ -650,6 +620,52 @@
       letter-spacing: 0.02em;
     }
 
+    /* ── TBD ITEMS: Clearly non-interactive ── */
+    /* Target buttons containing the TBD badge */
+    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"]) {
+      opacity: 0.4 !important;
+      pointer-events: none;
+      position: relative;
+    }
+
+    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"])::after {
+      content: 'NOT YET AVAILABLE';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: "Space Mono", monospace;
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      opacity: 0.7;
+    }
+
+    /* Hide the chevron on TBD items */
+    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"]) > div:last-child > span:last-child {
+      display: none;
+    }
+
+    /* ── STAFF BADGE: Inline in header, not fixed overlay ── */
+    #staff-badge {
+      position: fixed;
+      top: calc(var(--safe-top) + 8px);
+      right: 12px;
+      z-index: 50;
+      font-family: "Space Mono", monospace;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      background: var(--surface-3);
+      border: 0.5px solid var(--separator);
+      padding: 2px 6px;
+      border-radius: 3px;
+      pointer-events: none;
+      -webkit-font-smoothing: antialiased;
+      opacity: 0.5;
+    }
+
     /* ── WAKE LOCK BANNER (injected by JS) ── */
     #wake-lock-status {
       position: fixed;
@@ -672,8 +688,8 @@
       opacity: 1;
     }
     #wake-lock-status.active {
-      color: #5cb85c;
-      border-color: rgba(92, 184, 92, 0.2);
+      color: #b89860;
+      border-color: rgba(184, 152, 96, 0.2);
     }
 
   </style>
@@ -769,20 +785,78 @@
       }
 
       // ── AUTO-SCROLL TO TOP on tab switch ──
-      // When switching between MENU/CLASSICS/PREVIOUS,
-      // scroll back to top so staff always start fresh
+      let lastContentKey = '';
       const appObserver = new MutationObserver(() => {
         const pageScroll = document.querySelector('.page-scroll');
-        if (pageScroll && pageScroll.scrollTop > 200) {
-          // Only auto-scroll if they're deep in the list
-          // and a tab was just switched (content changed)
+        if (!pageScroll) return;
+        // Detect content change by checking first header text
+        const firstHeader = pageScroll.querySelector('div > div:first-child');
+        const key = firstHeader ? firstHeader.textContent.substring(0, 20) : '';
+        if (key && key !== lastContentKey) {
+          lastContentKey = key;
+          if (pageScroll.scrollTop > 200) {
+            pageScroll.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+          // Re-sort after content change (tab switch)
+          sortCategoryItems();
         }
       });
+
+      // ── ALPHABETICAL SORT: Spirits & Mods categories ──
+      function sortCategoryItems() {
+        const pageScroll = document.querySelector('.page-scroll');
+        if (!pageScroll) return;
+
+        // Find the content wrapper — skip sub-tab bar if present
+        const children = Array.from(pageScroll.children);
+        const wrapper = children.find(c => {
+          // The wrapper with categories has DIV children where first child
+          // is a header (not a BUTTON like sub-tabs)
+          const firstKid = c.children?.[0];
+          if (!firstKid) return false;
+          // Category wrappers: first child's first child is a header div
+          // with text like "VODKA2", "BOURBON6", etc.
+          const fc = firstKid.children?.[0];
+          if (!fc) return false;
+          const txt = fc.textContent || '';
+          // Category headers are ALL-CAPS with a trailing count number
+          return /^[A-Z &\-]+\d+$/.test(txt.trim()) || txt.trim() === 'TIER:';
+        });
+
+        if (!wrapper) return;
+
+        const categories = Array.from(wrapper.children);
+        categories.forEach(cat => {
+          const items = Array.from(cat.children).slice(1); // skip header
+          if (items.length < 2) return; // nothing to sort
+          // Skip the TIER legend row (has SPANs, not item DIVs)
+          if (items[0]?.tagName === 'SPAN') return;
+
+          // Get name from item.children[1].children[0].textContent
+          const getName = (el) => {
+            const nameDiv = el.children?.[1]?.children?.[0];
+            return (nameDiv?.textContent || '').trim().toLowerCase();
+          };
+
+          // Check if already sorted
+          const names = items.map(getName);
+          const sorted = [...names].sort((a, b) => a.localeCompare(b));
+          const alreadySorted = names.every((n, i) => n === sorted[i]);
+          if (alreadySorted) return;
+
+          // Sort items alphabetically by name
+          items
+            .sort((a, b) => getName(a).localeCompare(getName(b)))
+            .forEach(item => cat.appendChild(item));
+        });
+      }
 
       // Start observing once React mounts
       const root = document.getElementById('root');
       if (root) {
         appObserver.observe(root, { childList: true, subtree: true });
+        // Initial sort after a short delay for React to finish rendering
+        setTimeout(sortCategoryItems, 500);
       }
 
     })();
