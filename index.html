@@ -10,16 +10,13 @@
     <link rel="stylesheet" crossorigin="" href="/assets/index-BtVsLR70.css">
   <style>
     /* ═══════════════════════════════════════════════
-       PUBKEY BAR REFERENCE — Apple-Grade Design Layer
-       Precision surfaces, physics motion, material depth
+       PUBKEY BAR REFERENCE — Station Mode
+       Speed-first. Signal over noise. Every pixel earns its keep.
        ═══════════════════════════════════════════════ */
 
     :root {
-      /* Easing — iOS-calibrated curves */
       --spring: cubic-bezier(0.2, 0.9, 0.3, 1.0);
       --spring-snappy: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 
       /* Surfaces — warm undertone, never pure black */
       --surface-0: #080604;
@@ -29,11 +26,8 @@
       --surface-4: #221f1c;
       --surface-5: #2a2724;
 
-      /* Materials — translucent layers like Apple's vibrancy */
-      --material-thin: rgba(14, 12, 10, 0.72);
+      /* Materials */
       --material-regular: rgba(14, 12, 10, 0.82);
-      --material-thick: rgba(14, 12, 10, 0.94);
-      --material-ultrathin: rgba(14, 12, 10, 0.5);
 
       /* Brand */
       --orange: #eb5528;
@@ -42,33 +36,64 @@
       --orange-wash: rgba(235, 85, 40, 0.05);
       --orange-glow: rgba(255, 102, 51, 0.25);
 
-      /* Typography colors — warm, not cold */
+      /* Text — warm, not cold */
       --text-primary: #ede8e0;
       --text-secondary: #8c8478;
       --text-tertiary: #5c564e;
 
-      /* Borders — barely-there warm tint */
+      /* Separators */
       --separator: rgba(200, 170, 130, 0.06);
-      --separator-opaque: #1e1b18;
 
-      /* Safe areas for notch devices */
+      /* Safe areas */
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     /* ═══════════════════════════════
-       FOUNDATION — Surface hierarchy
+       FOUNDATION
        ═══════════════════════════════ */
 
-    #root {
+    #root, .app-shell {
       background: var(--surface-0) !important;
     }
 
-    .app-shell {
-      background: var(--surface-0) !important;
+    /* Global antialiasing */
+    .app-shell, .app-shell * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ── Top Bar — frosted material, like iOS nav bar ── */
+    /* ═══════════════════════════════
+       TYPOGRAPHY — Flow, not rigid
+       Loosen the grid. Let text breathe.
+       ═══════════════════════════════ */
+
+    /* Headlines — open up condensed tracking, lighter weight for flow */
+    .app-shell span[style*="font-family: var(--font-headline)"] {
+      letter-spacing: 0.06em !important;
+      font-weight: 700 !important; /* 700 not 900 — confident, not screaming */
+    }
+
+    /* Body text — bump light (300) to regular (400) on dark backgrounds */
+    .app-shell div[style*="font-weight: 300"] {
+      font-weight: 400 !important;
+    }
+
+    /* Mono labels — open up, add warmth with spacing */
+    .app-shell div[style*="font-family: var(--font-mono)"],
+    .app-shell span[style*="font-family: var(--font-mono)"] {
+      letter-spacing: 0.03em !important;
+    }
+
+    /* All text in the scroll area — slightly more generous line-height */
+    .page-scroll {
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════
+       TOP BAR — frosted material
+       ═══════════════════════════════ */
+
     .app-shell > div:first-child {
       background: var(--material-regular) !important;
       -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -79,13 +104,11 @@
       z-index: 10;
     }
 
-    /* Hairline luminance at bottom edge — Apple-style separator */
     .app-shell > div:first-child::after {
       content: '';
       position: absolute;
       bottom: -0.5px;
-      left: 0;
-      right: 0;
+      left: 0; right: 0;
       height: 0.5px;
       background: linear-gradient(90deg,
         transparent 5%,
@@ -96,28 +119,44 @@
       );
     }
 
-    /* ── Sub-tabs bar — raised surface ── */
+    /* ═══════════════════════════════
+       SUB-TABS (Cocktails: MENU/CLASSICS/PREVIOUS)
+       ═══════════════════════════════ */
+
+    /* Sub-tabs — minimal, not boxy */
     .flex.bg-surface,
     .page-scroll > div:first-child {
-      background: var(--surface-1) !important;
-      border-bottom: 0.5px solid var(--separator) !important;
+      background: transparent !important;
+      border-bottom: 0.5px solid rgba(200, 170, 130, 0.06) !important;
+      padding: 0 8px !important;
     }
 
-    /* Active tab text — vibrant orange with no heavy glow */
     .flex.bg-surface button[style*="border-bottom: 2px solid"],
     .page-scroll > div:first-child button[style*="border-bottom: 2px solid"] {
-      text-shadow: 0 0 12px rgba(255, 102, 51, 0.2);
+      text-shadow: none;
+      border-bottom-width: 1.5px !important;
     }
 
-    /* Inactive tab — precise dim */
     .flex.bg-surface button[style*="border-color: currentcolor currentcolor transparent"],
     .page-scroll > div:first-child button[style*="border-color: currentcolor currentcolor transparent"] {
       color: var(--text-tertiary) !important;
+      opacity: 0.7;
     }
 
-    /* ── Bottom Navigation — vibrancy material ── */
-    .app-shell nav,
-    nav[class*="border-t"] {
+    .flex.bg-surface button,
+    .page-scroll > div:first-child button {
+      transition: color 200ms var(--spring), border-color 200ms var(--spring), opacity 200ms ease !important;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 48px;
+      font-size: 12px !important;
+      letter-spacing: 0.08em !important;
+    }
+
+    /* ═══════════════════════════════
+       BOTTOM NAV — vibrancy material
+       ═══════════════════════════════ */
+
+    .app-shell nav, nav[class*="border-t"] {
       background: var(--material-regular) !important;
       -webkit-backdrop-filter: saturate(180%) blur(20px);
       backdrop-filter: saturate(180%) blur(20px);
@@ -127,14 +166,11 @@
       z-index: 10;
     }
 
-    /* Top edge luminance line */
-    .app-shell nav::before,
-    nav[class*="border-t"]::before {
+    .app-shell nav::before, nav[class*="border-t"]::before {
       content: '';
       position: absolute;
       top: -0.5px;
-      left: 0;
-      right: 0;
+      left: 0; right: 0;
       height: 0.5px;
       background: linear-gradient(90deg,
         transparent 10%,
@@ -145,91 +181,363 @@
       );
     }
 
-    /* Inactive nav labels */
+    /* Inactive nav — quiet */
     .app-shell nav button[style*="color: var(--color-gray-mid)"],
     nav[class*="border-t"] button[style*="color: var(--color-gray-mid)"] {
       color: var(--text-tertiary) !important;
-      opacity: 0.8;
+      opacity: 0.6;
     }
 
-    /* Active nav icon — vibrant with subtle glow */
+    /* Inactive emoji icons — desaturate so they don't dominate */
+    .app-shell nav button[style*="color: var(--color-gray-mid)"] span:first-child,
+    nav[class*="border-t"] button[style*="color: var(--color-gray-mid)"] span:first-child {
+      filter: grayscale(0.6) opacity(0.6);
+    }
+
+    /* Active nav icon — warm glow */
     .app-shell nav button[style*="color: var(--color-orange)"] span:first-child,
     nav[class*="border-t"] button[style*="color: var(--color-orange)"] span:first-child {
-      filter: drop-shadow(0 1px 4px var(--orange-glow));
-      transition: filter 300ms var(--spring);
+      filter: drop-shadow(0 1px 6px var(--orange-glow));
+    }
+
+    .app-shell nav button, nav[class*="border-t"] button {
+      transition: transform 150ms var(--spring), color 200ms var(--spring) !important;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 56px;
+    }
+
+    .app-shell nav button:active, nav[class*="border-t"] button:active {
+      transform: scale(0.88);
     }
 
     /* ═══════════════════════════════
-       CONTENT — Menu items, precision
+       COCKTAIL LIST ITEMS (buttons)
        ═══════════════════════════════ */
 
-    /* All list-item buttons — warm dividers */
+    /* Visible warm separators — items need real dividers, not invisible hairlines */
     .page-scroll button[style*="border-width: medium medium 1px"],
     .page-scroll button[style*="border-bottom"] {
-      border-bottom-color: var(--separator) !important;
+      border-bottom-color: rgba(200, 170, 130, 0.08) !important;
     }
 
-    /* Menu items — relative for accent + precise spacing */
     .page-scroll > div > div:last-child > button {
       position: relative;
+      padding: 22px 20px 22px 16px !important;
+      min-height: 72px;
+      transition: background-color 120ms ease;
+      -webkit-tap-highlight-color: transparent;
+      animation: itemIn 150ms var(--spring) both;
     }
 
-    /* Left accent — grows on touch like UIKit highlight */
+    /* Alternating surface — subtle even/odd rhythm breaks the wall-of-text */
+    .page-scroll > div > div:last-child > button:nth-child(even) {
+      background-color: rgba(200, 170, 130, 0.015) !important;
+    }
+
+    /* Left accent bar on hover/touch */
     .page-scroll > div > div:last-child > button::before {
       content: '';
       position: absolute;
-      left: 0;
-      top: 50%;
-      width: 2px;
-      height: 0;
+      left: 0; top: 50%;
+      width: 2.5px; height: 0;
       background: var(--orange);
-      border-radius: 1px;
+      border-radius: 2px;
       transform: translateY(-50%);
       transition: height 300ms var(--spring), opacity 300ms var(--spring);
       opacity: 0;
     }
 
     .page-scroll > div > div:last-child > button:hover::before {
-      height: 50%;
-      opacity: 1;
+      height: 60%; opacity: 1;
     }
 
     .page-scroll > div > div:last-child > button:active::before {
-      height: 70%;
-      opacity: 0.8;
+      height: 80%; opacity: 0.8;
     }
 
-    /* Cocktail name — warm primary text */
+    .page-scroll > div > div:last-child > button:active {
+      background-color: rgba(200, 170, 130, 0.06) !important;
+      transition: background-color 0ms;
+    }
+
+    .page-scroll > div > div:last-child > button:hover {
+      background-color: rgba(235, 85, 40, 0.03) !important;
+    }
+
+    /* Cocktail name — generous, confident */
     .page-scroll button div[style*="font-size: 22px"][style*="color: var(--color-white)"] {
       color: var(--text-primary) !important;
-      -webkit-font-smoothing: antialiased;
+      line-height: 1.35 !important;
+      letter-spacing: 0.005em;
     }
 
-    /* Method/meta text — warm secondary */
+    /* Glass + Method — indented, lighter, creates a visual "notch" for fast scanning */
     .page-scroll button div[style*="font-size: 13px"][style*="color: var(--color-gray-mid)"] {
+      font-size: 12.5px !important;
       color: var(--text-secondary) !important;
+      letter-spacing: 0.05em;
+      line-height: 1.5 !important;
+      margin-top: 5px !important;
+      opacity: 0.75;
     }
 
-    /* Chevron — crisp, Apple-like disclosure indicator */
+    /* Chevron — subtle directional hint */
     .page-scroll button > div:last-child > span:last-child {
       transition: transform 250ms var(--spring), opacity 250ms var(--spring);
-      opacity: 0.25;
-      font-size: 16px !important;
+      opacity: 0.15;
+      font-size: 14px !important;
     }
 
     .page-scroll button:hover > div:last-child > span:last-child {
-      transform: translateX(2px);
-      opacity: 0.5;
+      transform: translateX(3px); opacity: 0.4;
     }
 
-    /* ── Section Label ── */
+    /* Price — ghost-level for staff */
+    .page-scroll button div[style*="font-family: var(--font-mono)"][style*="color: var(--color-orange)"] {
+      opacity: 0.25;
+      font-size: 12px !important;
+    }
+
+    /* Section labels — editorial rule line */
     .page-scroll > div > div:last-child > div:first-child {
       color: var(--text-tertiary) !important;
       position: relative;
+      padding-top: 16px !important;
+      padding-bottom: 10px !important;
+      border-bottom: 0.5px solid rgba(200, 170, 130, 0.06);
+      margin-bottom: 4px;
+    }
+
+    @keyframes itemIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     /* ═══════════════════════════════
-       SHEET — iOS-grade modal
+       SPIRITS & MODS — Category items (divs, not buttons)
+       ═══════════════════════════════ */
+
+    /* Category headers — editorial, not industrial */
+    .page-scroll > div > div > div[style*="padding: 12px 16px 6px"][style*="font-family: var(--font-headline)"] {
+      border-bottom: 1px solid rgba(235, 85, 40, 0.10) !important;
+      padding-bottom: 10px !important;
+      padding-top: 20px !important;
+      margin-top: 4px;
+      letter-spacing: 0.08em !important;
+      font-weight: 700 !important;
+    }
+
+    /* Distributor codes — barely visible, staff don't need mid-service */
+    .page-scroll > div > div > div[style*="padding: 16px"][style*="display: flex"] > div[style*="flex-shrink: 0"][style*="font-family: var(--font-mono)"] {
+      opacity: 0.15 !important;
+      font-size: 9px !important;
+    }
+
+    /* Tier legend — compact single row */
+    .page-scroll > div > div:first-child[style] {
+      padding-top: 6px !important;
+      padding-bottom: 6px !important;
+    }
+
+    /* Spirit/Mod item names — warm, generous spacing */
+    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-size: 19px"] {
+      color: var(--text-primary) !important;
+      line-height: 1.3 !important;
+      letter-spacing: 0.005em;
+    }
+
+    /* Spirit sub-type label (mono) — more air */
+    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-family: var(--font-mono)"][style*="font-size: 13px"] {
+      line-height: 1.5 !important;
+      margin-top: 3px !important;
+      letter-spacing: 0.04em !important;
+    }
+
+    /* Descriptions — comfortable reading weight + height */
+    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-weight: 300"] {
+      line-height: 1.65 !important;
+      font-weight: 400 !important;
+      margin-top: 6px !important;
+    }
+
+    /* Spirit usage notes (↳) — key context, breathable */
+    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="color: rgba(235"] {
+      font-size: 13px !important;
+      line-height: 1.6 !important;
+      margin-top: 6px !important;
+      opacity: 0.9;
+    }
+
+    /* Spacing between items — breathing room + visible separators */
+    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"] {
+      padding-top: 20px !important;
+      padding-bottom: 20px !important;
+      border-bottom-color: rgba(200, 170, 130, 0.07) !important;
+    }
+
+    /* Alternating surface on spirit/mod items */
+    .page-scroll > div > div > div[style*="padding: 16px"][style*="border-bottom"]:nth-child(odd) {
+      background-color: rgba(200, 170, 130, 0.012);
+    }
+
+    /* ═══════════════════════════════
+       COCKTAIL DETAIL VIEW
+       ═══════════════════════════════ */
+
+    /* Back button — way bigger touch target, easier to reach */
+    .page-scroll button[style*="gap: 4px"][style*="align-items: center"],
+    .page-scroll > div > div > button:first-child {
+      min-height: 48px !important;
+      min-width: 80px !important;
+      padding: 12px 16px !important;
+      font-size: 16px !important;
+      border-radius: 10px;
+      margin: 4px 0 !important;
+      transition: background-color 150ms ease;
+    }
+
+    .page-scroll button[style*="gap: 4px"][style*="align-items: center"]:active,
+    .page-scroll > div > div > button:first-child:active {
+      background-color: var(--surface-3) !important;
+    }
+
+    /* Cocktail title in detail — hero, fluid */
+    .page-scroll > div > div > div[style*="font-size: 28px"],
+    .page-scroll > div > div > div[style*="font-size: 26px"],
+    .page-scroll > div > div > div[style*="font-size: 24px"] {
+      font-size: 30px !important;
+      line-height: 1.2 !important;
+      letter-spacing: -0.005em;
+      padding-bottom: 14px !important;
+    }
+
+    /* Tag pills below title — more space between them */
+    .page-scroll > div > div > div > span[style*="border-radius"][style*="padding"] {
+      margin-bottom: 4px !important;
+      letter-spacing: 0.02em;
+    }
+
+    /* Garnish line — let it breathe */
+    .page-scroll > div > div > div[style*="font-family: var(--font-mono)"][style*="border-radius"][style*="padding: 6px"] {
+      line-height: 1.6 !important;
+      letter-spacing: 0.02em;
+      margin-top: 8px !important;
+      margin-bottom: 8px !important;
+    }
+
+    /* Quick Build — reads like spoken instructions, not a code dump */
+    .quick-build-text {
+      color: var(--text-primary) !important;
+      font-size: 1.1rem !important;
+      line-height: 2.2 !important;
+      letter-spacing: 0.015em;
+      word-spacing: 0.06em;
+      padding: 20px 12px !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Quick Build container — elevated, highlighted */
+    div[style*="background"]:has(> .quick-build-text),
+    div[style*="background"]:has(> span[style*="QUICK BUILD"]),
+    div:has(> span[style*="font-size: 11px"][style*="letter-spacing"]):has(~ .quick-build-text) {
+      border-left: 3px solid var(--orange) !important;
+      border-radius: 0 8px 8px 0 !important;
+    }
+
+    /* "QUICK BUILD" label — make it pop */
+    span[style*="QUICK BUILD"],
+    span[style*="font-size: 11px"][style*="letter-spacing: 0.1em"] {
+      color: var(--orange-vibrant) !important;
+    }
+
+    /* Service Notes container — distinct from Quick Build */
+    div[style*="border-left: 3px solid"]:has(> span[style*="SERVICE NOTES"]),
+    div:has(> span[style*="SERVICE NOTES"]) {
+      border-left-color: var(--text-tertiary) !important;
+      opacity: 0.85;
+    }
+
+    /* Tag pills in detail view (price, glass, method) */
+    .page-scroll > div > div > div > span[style*="border-radius"] {
+      font-size: 12px !important;
+    }
+
+    /* Ingredients section header */
+    span[style*="font-size: 11px"][style*="letter-spacing"]:not(:empty) {
+      font-size: 10px !important;
+      letter-spacing: 0.12em !important;
+    }
+
+    /* View Batch Recipe link — prominent for prep work */
+    .page-scroll a[style*="display: flex"],
+    .page-scroll div[style*="cursor: pointer"][style*="display: flex"][style*="border-radius"] {
+      min-height: 48px;
+    }
+
+    /* ═══════════════════════════════
+       BEER TAB
+       ═══════════════════════════════ */
+
+    /* Tap number label */
+    .page-scroll > div > div > div[style*="padding: 16px"] span[style*="font-family: var(--font-mono)"] {
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    /* Beer service notes (italic orange) — more breathing room */
+    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-style: italic"] {
+      line-height: 1.6 !important;
+      margin-top: 8px !important;
+    }
+
+    /* ═══════════════════════════════
+       WINE TAB — make it useful, not a dead end
+       ═══════════════════════════════ */
+
+    /* "Ask bar manager" text — style as a clear action, not a shrug */
+    .page-scroll > div > div > div[style*="padding: 16px"] div[style*="font-style: italic"][style*="color: rgba(235"] {
+      font-style: normal !important;
+      padding: 6px 10px;
+      background: rgba(235, 85, 40, 0.06);
+      border-radius: 6px;
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    /* ═══════════════════════════════
+       TBD ITEMS — dead ends, not traps
+       ═══════════════════════════════ */
+
+    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"]) {
+      opacity: 0.3 !important;
+      pointer-events: none;
+      position: relative;
+    }
+
+    /* Hide the entire price+chevron column on TBD items */
+    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"]) > div:last-child {
+      visibility: hidden !important;
+    }
+
+    /* "COMING SOON" badge replaces price */
+    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"])::after {
+      content: 'COMING SOON';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: "Space Mono", monospace;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      background: var(--surface-3);
+      padding: 3px 8px;
+      border-radius: 4px;
+      z-index: 2;
+    }
+
+    /* ═══════════════════════════════
+       SHEET (detail modal for non-cocktail items)
        ═══════════════════════════════ */
 
     .sheet-panel {
@@ -240,39 +548,34 @@
         0 -1px 0 rgba(200, 170, 130, 0.04),
         0 -4px 16px rgba(0, 0, 0, 0.3),
         0 -16px 48px rgba(0, 0, 0, 0.4);
-      animation: sheetReveal 450ms var(--spring) !important;
+      animation: sheetReveal 120ms var(--spring-snappy) !important;
+      max-height: 90dvh !important;
+      padding-bottom: calc(var(--safe-bottom) + 16px) !important;
     }
 
-    /* Drag handle — pill indicator at top */
     .sheet-panel::before {
       content: '';
       display: block;
-      width: 36px;
-      height: 5px;
+      width: 36px; height: 5px;
       background: rgba(200, 170, 130, 0.2);
       border-radius: 2.5px;
       margin: 8px auto 4px;
     }
 
+    .sheet-panel div[style*="border-bottom"] {
+      padding-block: 10px !important;
+    }
+
     .sheet-backdrop {
-      background: rgba(0, 0, 0, 0.5) !important;
+      background: rgba(0, 0, 0, 0.6) !important;
       -webkit-backdrop-filter: saturate(120%) blur(24px);
       backdrop-filter: saturate(120%) blur(24px);
-      animation: backdropFade 300ms ease both !important;
+      animation: backdropFade 80ms ease both !important;
     }
 
     @keyframes sheetReveal {
-      from {
-        transform: translate(-50%, 100%);
-        opacity: 0;
-      }
-      30% {
-        opacity: 1;
-      }
-      to {
-        transform: translate(-50%, 0);
-        opacity: 1;
-      }
+      from { transform: translate(-50%, 40%); opacity: 0.5; }
+      to   { transform: translate(-50%, 0); opacity: 1; }
     }
 
     @keyframes backdropFade {
@@ -280,294 +583,10 @@
       to   { opacity: 1; }
     }
 
-    /* Quick Build card — elevated surface */
-    .quick-build-text {
-      color: var(--text-primary) !important;
-      line-height: 1.85 !important;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── Alpha Index — precise ── */
-    .alpha-index {
-      right: 2px !important;
-    }
-
-    .alpha-index button {
-      color: var(--text-tertiary) !important;
-      font-size: 9px !important;
-      padding: 1.5px 4px !important;
-      transition: color 100ms ease;
-    }
-
-    .alpha-index button:active {
-      color: var(--orange-vibrant) !important;
-    }
-
-    /* ── Search input — subtle, iOS-like ── */
-    .page-scroll input[type="text"],
-    .page-scroll input[placeholder*="earch"] {
-      background: var(--surface-2) !important;
-      border: 0.5px solid var(--separator) !important;
-      border-radius: 10px !important;
-      color: var(--text-primary) !important;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .page-scroll input::placeholder {
-      color: var(--text-tertiary) !important;
-    }
-
     /* ═══════════════════════════════
-       SCROLLBAR — invisible on mobile, thin on desktop
+       SEARCH
        ═══════════════════════════════ */
 
-    .page-scroll {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(200, 170, 130, 0.12) transparent;
-    }
-
-    .page-scroll::-webkit-scrollbar {
-      width: 2px;
-    }
-
-    .page-scroll::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .page-scroll::-webkit-scrollbar-thumb {
-      background: rgba(200, 170, 130, 0.12);
-      border-radius: 2px;
-    }
-
-    /* ═══════════════════════════════
-       MOTION — iOS-calibrated
-       ═══════════════════════════════ */
-
-    /* ── Page Load ── */
-    .app-shell {
-      animation: shellIn 500ms var(--spring) both;
-    }
-
-    @keyframes shellIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    /* Header — slides down from behind status bar */
-    .app-shell > div:first-child {
-      animation: headerIn 600ms 50ms var(--spring) both;
-    }
-
-    @keyframes headerIn {
-      from { opacity: 0; transform: translateY(-100%); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Bottom nav — slides up from below */
-    .app-shell > nav,
-    .app-shell nav[class*="border-t"] {
-      animation: navIn 500ms 100ms var(--spring) both;
-    }
-
-    @keyframes navIn {
-      from { opacity: 0; transform: translateY(100%); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Menu items — staggered rise */
-    .page-scroll > div > div:last-child > button {
-      animation: itemIn 500ms var(--spring) both;
-    }
-
-    .page-scroll > div > div:last-child > button:nth-child(1)  { animation-delay: 100ms; }
-    .page-scroll > div > div:last-child > button:nth-child(2)  { animation-delay: 140ms; }
-    .page-scroll > div > div:last-child > button:nth-child(3)  { animation-delay: 180ms; }
-    .page-scroll > div > div:last-child > button:nth-child(4)  { animation-delay: 220ms; }
-    .page-scroll > div > div:last-child > button:nth-child(5)  { animation-delay: 260ms; }
-    .page-scroll > div > div:last-child > button:nth-child(6)  { animation-delay: 300ms; }
-    .page-scroll > div > div:last-child > button:nth-child(7)  { animation-delay: 340ms; }
-    .page-scroll > div > div:last-child > button:nth-child(8)  { animation-delay: 380ms; }
-    .page-scroll > div > div:last-child > button:nth-child(9)  { animation-delay: 420ms; }
-    .page-scroll > div > div:last-child > button:nth-child(10) { animation-delay: 460ms; }
-
-    @keyframes itemIn {
-      from { opacity: 0; transform: translateY(16px) scale(0.98); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* Section label */
-    .page-scroll > div > div:last-child > div:first-child {
-      animation: labelIn 400ms 60ms var(--spring) both;
-    }
-
-    @keyframes labelIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    /* ── Touch Interactions — iOS UIKit feel ── */
-
-    /* Menu item: highlight like UITableViewCell */
-    .page-scroll > div > div:last-child > button {
-      transition:
-        background-color 60ms ease,
-        transform 200ms var(--spring);
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    /* Instant highlight on touch, slow fade on release */
-    .page-scroll > div > div:last-child > button:active {
-      background-color: rgba(200, 170, 130, 0.06) !important;
-      transition: background-color 0ms;
-    }
-
-    .page-scroll > div > div:last-child > button:hover {
-      background-color: var(--orange-wash) !important;
-    }
-
-    /* Sub-tabs */
-    .flex.bg-surface button,
-    .page-scroll > div:first-child button {
-      transition: color 200ms var(--spring), border-color 200ms var(--spring) !important;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    /* Bottom nav — scale like SF Symbols tap */
-    .app-shell nav button,
-    nav[class*="border-t"] button {
-      transition: transform 150ms var(--spring), color 200ms var(--spring) !important;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .app-shell nav button:active,
-    nav[class*="border-t"] button:active {
-      transform: scale(0.88);
-    }
-
-    /* ═══════════════════════════════
-       TEXTURE — barely-there warmth
-       ═══════════════════════════════ */
-
-    /* Film grain removed — imperceptible at 1.8%, saves a GPU compositing layer */
-
-    /* ═══════════════════════════════
-       GLOBAL TYPOGRAPHY
-       ═══════════════════════════════ */
-
-    /* Force antialiased rendering everywhere — Apple standard */
-    .app-shell,
-    .app-shell * {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    /* Tighten headline tracking slightly */
-    .app-shell span[style*="font-family: var(--font-headline)"] {
-      letter-spacing: 0.04em !important;
-    }
-
-    /* ═══════════════════════════════
-       ACCESSIBILITY
-       ═══════════════════════════════ */
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-delay: 0ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-
-      .app-shell::after {
-        display: none;
-      }
-    }
-
-    /* Focus visible — orange ring for keyboard nav */
-    *:focus-visible {
-      outline: 2px solid var(--orange);
-      outline-offset: 2px;
-      border-radius: 4px;
-    }
-
-    /* ═══════════════════════════════════════════════
-       BARTENDER STATION MODE
-       Speed-first overrides for QR-code bar stations.
-       Every ms matters when you're 3-deep at the rail.
-       ═══════════════════════════════════════════════ */
-
-    /* ── SPEED: Kill stagger delays — staff see this 50x/night ── */
-    .page-scroll > div > div:last-child > button:nth-child(n) {
-      animation-delay: 0ms !important;
-      animation-duration: 150ms !important;
-    }
-    .page-scroll > div > div:last-child > div:first-child {
-      animation-duration: 100ms !important;
-      animation-delay: 0ms !important;
-    }
-    .app-shell {
-      animation-duration: 200ms !important;
-    }
-    .app-shell > div:first-child {
-      animation-duration: 200ms !important;
-      animation-delay: 0ms !important;
-    }
-    .app-shell > nav,
-    .app-shell nav[class*="border-t"] {
-      animation-duration: 200ms !important;
-      animation-delay: 0ms !important;
-    }
-
-    /* ── SPEED: Sheet opens instantly ── */
-    .sheet-panel {
-      animation: sheetRevealFast 120ms var(--spring-snappy) !important;
-    }
-    .sheet-backdrop {
-      animation: backdropFade 80ms ease both !important;
-    }
-    @keyframes sheetRevealFast {
-      from {
-        transform: translate(-50%, 40%);
-        opacity: 0.5;
-      }
-      to {
-        transform: translate(-50%, 0);
-        opacity: 1;
-      }
-    }
-
-    /* ── QUICK BUILD: Bartender's primary read target ── */
-    .quick-build-text {
-      font-size: 1.15rem !important;
-      line-height: 2.0 !important;
-      letter-spacing: 0.01em;
-      padding: 16px 4px !important;
-    }
-
-    /* Highlight measurement amounts in quick build */
-    .quick-build-text {
-      word-spacing: 0.05em;
-    }
-
-    /* ── TOUCH: Bigger targets for wet/busy hands ── */
-    .page-scroll > div > div:last-child > button {
-      padding: 20px 16px !important;
-      min-height: 72px;
-    }
-
-    /* Bottom nav — larger tap area */
-    .app-shell nav button,
-    nav[class*="border-t"] button {
-      min-height: 56px;
-    }
-
-    /* Sub-tab buttons — taller for fast switching */
-    .flex.bg-surface button,
-    .page-scroll > div:first-child button {
-      min-height: 52px;
-    }
-
-    /* ── SEARCH: Always visible, prominent ── */
     .page-scroll input[type="text"],
     .page-scroll input[placeholder*="earch"] {
       font-size: 16px !important;
@@ -575,78 +594,80 @@
       border-radius: 12px !important;
       background: var(--surface-3) !important;
       border: 1px solid rgba(200, 170, 130, 0.12) !important;
+      color: var(--text-primary) !important;
       min-height: 48px;
     }
+
     .page-scroll input:focus {
       border-color: var(--orange) !important;
       box-shadow: 0 0 0 2px rgba(235, 85, 40, 0.15) !important;
     }
 
-    /* ── SHEET: Better readability for recipe detail ── */
-    .sheet-panel {
-      max-height: 90dvh !important;
-      padding-bottom: calc(var(--safe-bottom) + 16px) !important;
+    .page-scroll input::placeholder {
+      color: var(--text-tertiary) !important;
     }
 
-    /* Ingredient rows in sheet — wider spacing */
-    .sheet-panel div[style*="border-bottom"] {
-      padding-block: 10px !important;
-    }
+    /* ═══════════════════════════════
+       ALPHA INDEX
+       ═══════════════════════════════ */
 
-    /* ── ALPHA INDEX: Slightly larger for bar use ── */
+    .alpha-index { right: 2px !important; }
+
     .alpha-index button {
+      color: var(--text-tertiary) !important;
       font-size: 10px !important;
       padding: 3px 6px !important;
       min-width: 24px;
       min-height: 20px;
+      transition: color 100ms ease;
     }
 
-    /* ── DOUBLE-TAP DISMISS: Sheet backdrop thicker for easy dismiss ── */
-    .sheet-backdrop {
-      /* Slightly more opaque so it's easier to notice/tap */
-      background: rgba(0, 0, 0, 0.6) !important;
+    .alpha-index button:active {
+      color: var(--orange-vibrant) !important;
     }
 
-    /* ── PRICE: De-emphasize for staff (they know the prices) ── */
-    .page-scroll button div[style*="font-family: var(--font-mono)"][style*="color: var(--color-orange)"] {
-      opacity: 0.5;
-      font-size: 14px !important;
+    /* ═══════════════════════════════
+       SCROLLBAR
+       ═══════════════════════════════ */
+
+    .page-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(200, 170, 130, 0.12) transparent;
     }
 
-    /* ── METHOD BADGE: Make glass+method more prominent for staff ── */
-    .page-scroll button div[style*="font-size: 13px"][style*="color: var(--color-gray-mid)"] {
-      font-size: 14px !important;
-      color: var(--text-secondary) !important;
-      letter-spacing: 0.02em;
+    .page-scroll::-webkit-scrollbar { width: 2px; }
+    .page-scroll::-webkit-scrollbar-track { background: transparent; }
+    .page-scroll::-webkit-scrollbar-thumb { background: rgba(200, 170, 130, 0.12); border-radius: 2px; }
+
+    /* ═══════════════════════════════
+       MOTION — fast, not flashy
+       ═══════════════════════════════ */
+
+    .app-shell {
+      animation: fadeIn 200ms var(--spring) both;
     }
 
-    /* ── TBD ITEMS: Clearly non-interactive ── */
-    /* Target buttons containing the TBD badge */
-    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"]) {
-      opacity: 0.4 !important;
-      pointer-events: none;
-      position: relative;
+    .app-shell > div:first-child {
+      animation: fadeIn 200ms var(--spring) both;
     }
 
-    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"])::after {
-      content: 'NOT YET AVAILABLE';
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: "Space Mono", monospace;
-      font-size: 8px;
-      letter-spacing: 0.1em;
-      color: var(--text-tertiary);
-      opacity: 0.7;
+    .app-shell > nav, .app-shell nav[class*="border-t"] {
+      animation: fadeIn 200ms var(--spring) both;
     }
 
-    /* Hide the chevron on TBD items */
-    .page-scroll button:has(span[style*="background: rgba(235, 85, 40"]) > div:last-child > span:last-child {
-      display: none;
+    .page-scroll > div > div:last-child > div:first-child {
+      animation: fadeIn 100ms var(--spring) both;
     }
 
-    /* ── STAFF BADGE: Inline in header, not fixed overlay ── */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ═══════════════════════════════
+       STAFF BADGE
+       ═══════════════════════════════ */
+
     #staff-badge {
       position: fixed;
       top: calc(var(--safe-top) + 8px);
@@ -662,14 +683,16 @@
       padding: 2px 6px;
       border-radius: 3px;
       pointer-events: none;
-      -webkit-font-smoothing: antialiased;
       opacity: 0.5;
     }
 
-    /* ── WAKE LOCK BANNER (injected by JS) ── */
+    /* ═══════════════════════════════
+       WAKE LOCK STATUS
+       ═══════════════════════════════ */
+
     #wake-lock-status {
       position: fixed;
-      bottom: calc(var(--tab-bar-height) + var(--safe-bottom) + 8px);
+      bottom: calc(80px + var(--safe-bottom));
       left: 50%;
       transform: translateX(-50%);
       z-index: 45;
@@ -684,12 +707,29 @@
       opacity: 0;
       transition: opacity 300ms ease;
     }
-    #wake-lock-status.visible {
-      opacity: 1;
-    }
+
+    #wake-lock-status.visible { opacity: 1; }
     #wake-lock-status.active {
       color: #b89860;
       border-color: rgba(184, 152, 96, 0.2);
+    }
+
+    /* ═══════════════════════════════
+       ACCESSIBILITY
+       ═══════════════════════════════ */
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 2px;
+      border-radius: 4px;
     }
 
   </style>
@@ -705,17 +745,10 @@
     <div id="wake-lock-status"></div>
 
     <script>
-    /* ═══════════════════════════════════════════════
-       BARTENDER STATION ENHANCEMENTS
-       Injected JS that hooks into the React app's DOM
-       after it renders. Non-destructive — if React
-       re-renders, MutationObserver re-applies.
-       ═══════════════════════════════════════════════ */
     (function() {
       'use strict';
 
-      // ── WAKE LOCK: Keep screen on at the station ──
-      // Bartenders scan QR → phone screen must stay on
+      // ── WAKE LOCK ──
       let wakeLock = null;
       const wakeLockEl = document.getElementById('wake-lock-status');
 
@@ -725,138 +758,161 @@
           wakeLock = await navigator.wakeLock.request('screen');
           wakeLockEl.textContent = '☀ SCREEN ON';
           wakeLockEl.classList.add('visible', 'active');
-          // Fade out after 3s — they don't need to keep seeing it
           setTimeout(() => wakeLockEl.classList.remove('visible'), 3000);
-
           wakeLock.addEventListener('release', () => {
             wakeLockEl.textContent = '🌙 SCREEN OFF';
             wakeLockEl.classList.remove('active');
             wakeLockEl.classList.add('visible');
             setTimeout(() => wakeLockEl.classList.remove('visible'), 2000);
           });
-        } catch (e) {
-          // Wake Lock not supported or denied — fail silently
-        }
+        } catch (e) {}
       }
 
-      // Re-acquire on visibility change (phone locked/unlocked)
       document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          requestWakeLock();
-        }
+        if (document.visibilityState === 'visible') requestWakeLock();
       });
-
       requestWakeLock();
 
-      // ── KEYBOARD SHORTCUT: Quick search focus ──
-      // If a bluetooth keyboard is nearby (some bar setups)
+      // ── KEYBOARD SHORTCUTS ──
       document.addEventListener('keydown', (e) => {
-        // Cmd+K or Ctrl+K or just "/" to focus search
         if (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key === 'k')) {
           e.preventDefault();
-          const searchInput = document.querySelector('.page-scroll input[type="text"], .page-scroll input[placeholder*="earch"]');
-          if (searchInput) {
-            searchInput.focus();
-            searchInput.select();
-          }
+          const input = document.querySelector('.page-scroll input[type="text"], .page-scroll input[placeholder*="earch"]');
+          if (input) { input.focus(); input.select(); }
         }
-        // Escape to close sheet
         if (e.key === 'Escape') {
           const backdrop = document.querySelector('.sheet-backdrop');
           if (backdrop) backdrop.click();
         }
       });
 
-      // ── HAPTIC FEEDBACK: Subtle vibration on sheet open ──
-      // Gives tactile confirmation the tap registered
-      const observer = new MutationObserver((mutations) => {
-        for (const m of mutations) {
-          for (const node of m.addedNodes) {
-            if (node.classList && node.classList.contains('sheet-panel')) {
-              if (navigator.vibrate) navigator.vibrate(10);
-            }
-          }
-        }
-      });
-
+      // ── HAPTIC ON SHEET OPEN ──
       const sheetRoot = document.getElementById('sheet-root');
       if (sheetRoot) {
-        observer.observe(sheetRoot, { childList: true, subtree: true });
+        new MutationObserver((mutations) => {
+          for (const m of mutations) {
+            for (const node of m.addedNodes) {
+              if (node.classList?.contains('sheet-panel') && navigator.vibrate) {
+                navigator.vibrate(10);
+              }
+            }
+          }
+        }).observe(sheetRoot, { childList: true, subtree: true });
       }
 
-      // ── AUTO-SCROLL TO TOP on tab switch ──
+      // ── CONTENT ENHANCEMENTS ──
+      // Runs on every content change: sorts categories, strips count numbers,
+      // hides distributor noise, and scrolls to top on tab switch.
+
       let lastContentKey = '';
-      const appObserver = new MutationObserver(() => {
-        const pageScroll = document.querySelector('.page-scroll');
-        if (!pageScroll) return;
-        // Detect content change by checking first header text
-        const firstHeader = pageScroll.querySelector('div > div:first-child');
-        const key = firstHeader ? firstHeader.textContent.substring(0, 20) : '';
-        if (key && key !== lastContentKey) {
-          lastContentKey = key;
-          if (pageScroll.scrollTop > 200) {
-            pageScroll.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-          // Re-sort after content change (tab switch)
-          sortCategoryItems();
-        }
-      });
 
-      // ── ALPHABETICAL SORT: Spirits & Mods categories ──
-      function sortCategoryItems() {
+      function enhanceContent() {
         const pageScroll = document.querySelector('.page-scroll');
         if (!pageScroll) return;
 
-        // Find the content wrapper — skip sub-tab bar if present
-        const children = Array.from(pageScroll.children);
-        const wrapper = children.find(c => {
-          // The wrapper with categories has DIV children where first child
-          // is a header (not a BUTTON like sub-tabs)
-          const firstKid = c.children?.[0];
-          if (!firstKid) return false;
-          // Category wrappers: first child's first child is a header div
-          // with text like "VODKA2", "BOURBON6", etc.
-          const fc = firstKid.children?.[0];
-          if (!fc) return false;
-          const txt = fc.textContent || '';
-          // Category headers are ALL-CAPS with a trailing count number
-          return /^[A-Z &\-]+\d+$/.test(txt.trim()) || txt.trim() === 'TIER:';
-        });
+        sortCategoryItems(pageScroll);
+        stripCategoryCounts(pageScroll);
+        dimDistributorCodes(pageScroll);
+      }
 
+      // Sort Spirits & Mods items A-Z within each category
+      function sortCategoryItems(pageScroll) {
+        const wrapper = findCategoryWrapper(pageScroll);
         if (!wrapper) return;
 
-        const categories = Array.from(wrapper.children);
-        categories.forEach(cat => {
-          const items = Array.from(cat.children).slice(1); // skip header
-          if (items.length < 2) return; // nothing to sort
-          // Skip the TIER legend row (has SPANs, not item DIVs)
-          if (items[0]?.tagName === 'SPAN') return;
+        Array.from(wrapper.children).forEach(cat => {
+          const items = Array.from(cat.children).slice(1);
+          if (items.length < 2 || items[0]?.tagName === 'SPAN') return;
 
-          // Get name from item.children[1].children[0].textContent
           const getName = (el) => {
             const nameDiv = el.children?.[1]?.children?.[0];
             return (nameDiv?.textContent || '').trim().toLowerCase();
           };
 
-          // Check if already sorted
           const names = items.map(getName);
           const sorted = [...names].sort((a, b) => a.localeCompare(b));
-          const alreadySorted = names.every((n, i) => n === sorted[i]);
-          if (alreadySorted) return;
+          if (names.every((n, i) => n === sorted[i])) return;
 
-          // Sort items alphabetically by name
           items
             .sort((a, b) => getName(a).localeCompare(getName(b)))
             .forEach(item => cat.appendChild(item));
         });
       }
 
-      // Start observing once React mounts
+      // Strip trailing count from category headers: "BOURBON6" → "BOURBON"
+      function stripCategoryCounts(pageScroll) {
+        const wrapper = findCategoryWrapper(pageScroll);
+        if (!wrapper) return;
+
+        Array.from(wrapper.children).forEach(cat => {
+          const header = cat.children?.[0];
+          if (!header) return;
+          // The header has a structure like: <div><span>BOURBON</span><span>6</span></div>
+          // OR it might be a single text node like "BOURBON6"
+          // Find the count span — it's usually the last child with just a number
+          const kids = Array.from(header.children);
+          kids.forEach(kid => {
+            const txt = kid.textContent?.trim();
+            if (txt && /^\d+$/.test(txt) && !kid.dataset.enhanced) {
+              kid.style.opacity = '0.25';
+              kid.style.fontSize = '10px';
+              kid.style.marginLeft = '6px';
+              kid.dataset.enhanced = '1';
+            }
+          });
+        });
+      }
+
+      // Further dim distributor codes (RNDC, SGWS, DOPS, Breakthru)
+      function dimDistributorCodes(pageScroll) {
+        const wrapper = findCategoryWrapper(pageScroll);
+        if (!wrapper) return;
+
+        Array.from(wrapper.children).forEach(cat => {
+          Array.from(cat.children).slice(1).forEach(item => {
+            // Distributor code is the last direct child div with mono font
+            const lastDiv = item.children?.[item.children.length - 1];
+            if (!lastDiv || lastDiv.dataset.dimmed) return;
+            const style = lastDiv.getAttribute('style') || '';
+            if (style.includes('font-mono') && (style.includes('11px') || style.includes('13px')) && style.includes('flex-shrink')) {
+              lastDiv.style.opacity = '0.15';
+              lastDiv.style.fontSize = '9px';
+              lastDiv.dataset.dimmed = '1';
+            }
+          });
+        });
+      }
+
+      function findCategoryWrapper(pageScroll) {
+        return Array.from(pageScroll.children).find(c => {
+          const firstKid = c.children?.[0];
+          if (!firstKid) return false;
+          const fc = firstKid.children?.[0];
+          if (!fc) return false;
+          const txt = fc.textContent || '';
+          return /^[A-Z &\-]+\d+$/.test(txt.trim()) || txt.trim() === 'TIER:';
+        });
+      }
+
+      // ── MAIN OBSERVER ──
       const root = document.getElementById('root');
       if (root) {
-        appObserver.observe(root, { childList: true, subtree: true });
-        // Initial sort after a short delay for React to finish rendering
-        setTimeout(sortCategoryItems, 500);
+        new MutationObserver(() => {
+          const pageScroll = document.querySelector('.page-scroll');
+          if (!pageScroll) return;
+
+          const firstHeader = pageScroll.querySelector('div > div:first-child');
+          const key = firstHeader ? firstHeader.textContent.substring(0, 20) : '';
+          if (key && key !== lastContentKey) {
+            lastContentKey = key;
+            if (pageScroll.scrollTop > 200) {
+              pageScroll.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            enhanceContent();
+          }
+        }).observe(root, { childList: true, subtree: true });
+
+        setTimeout(enhanceContent, 500);
       }
 
     })();
